@@ -2,8 +2,7 @@ Hackpad-Cli
 ===================
 
 This is a command-line utility to check and manipulate hackpad documents.
-It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf and was tested with ruby 2.1.1
-(but should work with 1.9.3, we'll have to wait I add travis there and write some damn tests).
+It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf and was tested with ruby 1.9.3 and 2.1.1.
 
 Initially this tool was created to overcome the frustration of the md export of pads,
 because we need to copy them to other places sometimes. Proper markdown would be appreciated.
