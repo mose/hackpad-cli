@@ -37,6 +37,8 @@ At first launch it will create your config dir (default ~/.hackpad-cli/), and wi
 Roadmap and todoz
 ---------------------
 
+Check the [Changelog](CHANGELOG.md) for past evolutions.
+
 * cache the pads list in a local storage
 * refresh cache according to last cached date
 * add commands for creating a new pad, linked to $EDITOR
