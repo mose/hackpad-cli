@@ -1,29 +1,39 @@
-# Hackpad::Cli
+Hackpad-Cli
+===================
 
-TODO: Write a gem description
+This is a command-line utility to check and manipulate hackpad documents.
+It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf
 
-## Installation
+Installation
+------------------
 
-Add this line to your application's Gemfile:
+    gem install hackpad-cli
 
-    gem 'hackpad-cli'
+or
 
-And then execute:
+    git clone https://github.com/mose/hackpad-cli.git
+    cd hackpad-cli
+    bundle install
 
-    $ bundle
+Usage
+---------------
 
-Or install it yourself as:
+(use `bundle exec` if you need)
 
-    $ gem install hackpad-cli
+    hpcli
 
-## Usage
 
-TODO: Write usage instructions here
-
-## Contributing
+Contributing
+------------------
 
 1. Fork it ( http://github.com/<my-github-username>/hackpad-cli/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+Copyright
+----------
+
+(c) Copy is right, 2014 - mose - this code is distributed under MIT license
+

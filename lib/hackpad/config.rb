@@ -9,28 +9,33 @@ module Hackpad
       YAML::load_file conf_file
     end
 
+  private
+
     def setup(dir)
       config = {}
       FileUtils.mkdir_p dir
       puts "We need first to initialize your hackpad-cli configuration.".colorize(:blue)
-      puts "Please gather your information from https://hackpad.com/ep/account/settings/"
+      puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/"
       print "What is your Client ID?  "
       STDOUT.flush
-      config[:client_id] = STDIN.gets.chomp
+      config['client_id'] = STDIN.gets.chomp
       print "What is your Secret Key? "
       STDOUT.flush
-      config[:secret] = STDIN.gets.chomp
+      config['secret'] = STDIN.gets.chomp
+      print "What is the URI of your pad? "
+      STDOUT.flush
+      config['site'] = STDIN.gets.chomp
       File.open(conf_file, "w") do |f|
         f.write YAML::dump(config)
       end
     end
 
     def conf_file
-      @_conf_file ||= File.join(conf_dir, 'config.yml')
+      File.join(conf_dir, 'config.yml')
     end
 
     def conf_dir(dir = "#{ENV["HOME"]}/.hackpad-cli/")
-      @_conf_dir ||= dir
+      dir
     end
 
   end

@@ -1,7 +1,7 @@
 require "thor"
 require "colorize"
 require "yaml"
-require_relative "config"
+require_relative "client"
 
 module Hackpad
 
@@ -16,16 +16,19 @@ module Hackpad
       default: File.join(ENV["HOME"], ".hackpad-cli/"),
       desc: "Path to the hackpad-cli directory to use"
 
-
-    desc "collections", "Lists available collections."
-    def collections
-      config = Hackpad::Config.load options[:configdir]
+    desc "list", "Lists available pads."
+    def list
+      Hackpad::Client.new(options[:configdir]).list
     end
 
-    desc "list [collection]", "Lists available pads (in collection if collection argument is provided)."
-    def list
-      config = Hackpad::Config.load options[:configdir]
-      puts config.inspect.colorize(:blue)
+    desc "getinfo [pad_id]", "gets info for the pad <pad_id>"
+    def getinfo(pad)
+      Hackpad::Client.new(options[:configdir]).getinfo pad
+    end
+
+    desc "show [pad_id] [format]", "shows pad <pad_id> in format [html,txt,md] (default txt)"
+    def show(pad,format='txt')
+      Hackpad::Client.new(options[:configdir]).show pad, format
     end
 
   end
