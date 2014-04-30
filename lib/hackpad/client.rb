@@ -21,12 +21,12 @@ module Hackpad
     end
 
     # GET /api/1.0/pads/all
-    def list
+    def listall
       res = @token.get "/api/1.0/pads/all"
       if res.is_a? Net::HTTPSuccess
         all = JSON.parse res.body
         all.each do |a|
-          puts getinfo(a)
+          getinfo(a)
         end
       else
         puts "#{res.inspect}".colorize :red
@@ -38,7 +38,7 @@ module Hackpad
     def getinfo(pad)
       res = @token.get "/api/1.0/pad/#{pad}/content.txt"
       if res.is_a? Net::HTTPSuccess
-        puts "#{@config['site']}/#{pad} - #{res.body.lines.first.chomp}"
+        puts "#{@config['site']}/#{pad} - #{pad} - #{res.body.lines.first.chomp}"
       else
         puts "#{pad} failed".colorize :red
       end

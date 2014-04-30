@@ -26,8 +26,12 @@ Usage
 
 (use `bundle exec` if you need, mostly in clone mode when not using rvm)
 
-    hpcli # will show help
+    hpcli                 # will show help
+    hpcli list            # gets a list of pads you have access to
     hpcli get <pad_id> md # will spit out the content in nice markdown
+    # and you can use alternate config
+    hpcli list -c $HOME/.hpcli-alt
+
 
 Roadmap and todoz
 ---------------------

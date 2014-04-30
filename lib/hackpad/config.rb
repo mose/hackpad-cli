@@ -2,9 +2,10 @@ module Hackpad
   module Config
     extend self
 
-    def load(dir = nil)
-      if !Dir.exists?(conf_dir dir) || !File.exists?(conf_file)
-        setup conf_dir dir
+    def load(dir)
+      conf_file = File.join(dir, 'config.yml')
+      if !Dir.exists?(dir) || !File.exists?(conf_file)
+        setup dir
       end
       YAML::load_file conf_file
     end
@@ -28,14 +29,6 @@ module Hackpad
       File.open(conf_file, "w") do |f|
         f.write YAML::dump(config)
       end
-    end
-
-    def conf_file
-      File.join(conf_dir, 'config.yml')
-    end
-
-    def conf_dir(dir = "#{ENV["HOME"]}/.hackpad-cli/")
-      dir
     end
 
   end
