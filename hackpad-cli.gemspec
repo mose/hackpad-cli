@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["mose@mose.com"]
   spec.summary       = %q{CLI for hackpad browsing and editing.}
   spec.description   = %q{A Command Line Interface for consuming the Hackpad REST API.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/mose/hackpad-cli"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

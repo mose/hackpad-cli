@@ -2,7 +2,7 @@ require 'oauth'
 require 'net/http'
 require 'json'
 require 'reverse_markdown'
-require 'awesome_print'
+
 require_relative 'config'
 
 module Hackpad
