@@ -29,7 +29,9 @@ Usage
     hpcli list            # gets a list of pads you have access to
     hpcli get <pad_id> md # will spit out the content in nice markdown
     # and you can use alternate config
-    hpcli list -c $HOME/.hpcli-alt
+    hpcli list -w alt
+
+At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is .. default.yml). If you pass the `-w whatever` option at the end, it will ask questions again to write whatever.yml config file.
 
 
 Roadmap and todoz
