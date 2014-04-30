@@ -2,19 +2,24 @@ module Hackpad
   module Config
     extend self
 
-    def load(dir)
-      conf_file = File.join(dir, 'config.yml')
-      if !Dir.exists?(dir) || !File.exists?(conf_file)
-        setup dir
+    def load(options)
+      configdir = options[:configdir]
+      configfile = File.join(configdir, "#{options[:workspace]}.yml")
+      # temporary migration path
+      if !File.exists?(configfile) && File.exists?(File.join(configdir, "config.yml"))
+        FileUtils.mv File.join(configdir, "config.yml"), configfile
       end
-      YAML::load_file conf_file
+      if !Dir.exists?(configdir) || !File.exists?(configfile)
+        setup configfile
+      end
+      YAML::load_file configfile
     end
 
   private
 
-    def setup(dir)
+    def setup(configfile)
       config = {}
-      FileUtils.mkdir_p dir
+      FileUtils.mkdir_p File.dirname(configfile)
       puts "We need first to initialize your hackpad-cli configuration.".colorize(:blue)
       puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/"
       print "What is your Client ID?  "
@@ -26,7 +31,7 @@ module Hackpad
       print "What is the URI of your pad? "
       STDOUT.flush
       config['site'] = STDIN.gets.chomp
-      File.open(conf_file, "w") do |f|
+      File.open(configfile, "w") do |f|
         f.write YAML::dump(config)
       end
     end

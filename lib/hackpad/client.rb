@@ -8,9 +8,8 @@ require_relative 'config'
 module Hackpad
   class Client
 
-    def initialize(configdir)
-      @configdir = configdir
-      @config = Config.load configdir
+    def initialize(options)
+      @config = Config.load options
       site = URI.parse @config['site']
       consumer = OAuth::Consumer.new(
         @config['client_id'],
