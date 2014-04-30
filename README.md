@@ -28,6 +28,18 @@ Usage
     hpcli # will show help
     hpcli get <pad_id> md # will spit out the content in nice markdown
 
+Roadmap and todoz
+---------------------
+
+* cache the pads list in a local storage
+* refresh cache according to last cached date
+* add commands for creating a new pad, linked to $EDITOR
+* add admin commands for managing users
+* nag hackpad for they add REST endpoints to query collections
+* write proper tests
+* add freaking cool badges on the readme
+* add a gateway to github so a pad could be copied over a wiki page directly or in a repo somehow
+* implement pretty much all what the hackpad API v1 offers
 
 Contributing
 ------------------
