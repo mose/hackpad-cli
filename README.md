@@ -4,6 +4,10 @@ Hackpad-Cli
 This is a command-line utility to check and manipulate hackpad documents.
 It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf
 
+Initially this tool was created to overcome the frustration of the md export of pads, becasue we need to copy them to other places sometimes where proper markdown would be appreciated.
+
+So for now, it does that, by transforming the html in markdown with the https://github.com/xijo/reverse_markdown gem.
+
 Installation
 ------------------
 
@@ -18,9 +22,10 @@ or
 Usage
 ---------------
 
-(use `bundle exec` if you need)
+(use `bundle exec` if you need, mostly in clone mode when not using rvm)
 
-    hpcli
+    hpcli # will show help
+    hpcli get <pad_id> md # will spit out the content in nice markdown
 
 
 Contributing
