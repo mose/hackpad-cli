@@ -62,7 +62,7 @@ module Hackpad
         printf "%-20s %s\n", "URI", "#{@config['site']}/#{pad}"
         printf "%-20s %s\n", "Size", "#{res.body.length} chars"
       else
-        puts "#{pad} failed".colorize :red
+        puts "#{pad} failed".red
       end
       res = @token.get "/api/1.0/pad/#{pad}/options"
       if res.is_a? Net::HTTPSuccess
