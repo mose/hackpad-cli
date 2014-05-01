@@ -53,7 +53,7 @@ Check the [Changelog](CHANGELOG.md) for past evolutions.
 * add admin commands for managing users
 * nag hackpad for they add REST endpoints to query collections
 * write proper tests
-* add freaking cool badges on the readme
+* <s>add freaking cool badges on the readme</s>
 * add a gateway to github so a pad could be copied over a wiki page directly or in a repo somehow
 * implement pretty much all what the hackpad API v1 offers
 

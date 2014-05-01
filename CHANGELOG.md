@@ -4,6 +4,7 @@ Hackpad-cli changelog
 v0.0.5 - wip
 --------------------
 
+* add some tests
 * add a flag for removing colors `-p`
 
 v0.0.4 - 2014-04-01
