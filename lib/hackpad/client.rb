@@ -3,6 +3,7 @@ require 'net/http'
 require 'json'
 require 'cgi'
 require 'reverse_markdown'
+require 'colorize'
 
 require_relative 'config'
 
@@ -18,6 +19,9 @@ module Hackpad
         site: @config['site']
       )
       @token = OAuth::AccessToken.new consumer
+      if options[:plain]
+        load File.expand_path('../plain_colors.rb', __FILE__)
+      end
     end
 
     # GET /api/1.0/pads/all
@@ -26,12 +30,12 @@ module Hackpad
       if res.is_a? Net::HTTPSuccess
         all = JSON.parse res.body
         all.each do |a|
-          puts "#{a['id'].bold} - #{unescape(a['title']).colorize(:yellow)}\n   #{extract a['snippet']}"
+          puts "#{a['id'].bold} - #{unescape(a['title']).yellow}\n   #{extract a['snippet']}"
         end
 
       else
-        puts "#{res.inspect}".colorize :red
-        puts "#{res.body}".colorize :red
+        puts "#{res.inspect}".red
+        puts "#{res.body}".red
         return back
       end
     end
@@ -44,8 +48,8 @@ module Hackpad
           getinfo(a)
         end
       else
-        puts "#{res.inspect}".colorize :red
-        puts "#{res.body}".colorize :red
+        puts "#{res.inspect}".red
+        puts "#{res.body}".red
         return back
       end
     end
@@ -54,7 +58,7 @@ module Hackpad
       res = @token.get "/api/1.0/pad/#{pad}/content.txt"
       if res.is_a? Net::HTTPSuccess
         printf "%-20s %s\n", "Id", "#{pad}".bold
-        printf "%-20s %s\n", "Title", "#{res.body.lines.first.chomp}".colorize(:yellow)
+        printf "%-20s %s\n", "Title", "#{res.body.lines.first.chomp}".yellow
         printf "%-20s %s\n", "URI", "#{@config['site']}/#{pad}"
         printf "%-20s %s\n", "Size", "#{res.body.length} chars"
       else
@@ -66,7 +70,7 @@ module Hackpad
         printf "%-20s %s\n", "Guest Policy", "#{a['options']['guestPolicy']}"
         printf "%-20s %s\n", "Moderated", "#{a['options']['isModerated'] || "No"}"
       else
-        puts "#{pad} failed".colorize :red
+        puts "#{pad} failed".red
       end
     end
 
@@ -82,7 +86,7 @@ module Hackpad
           puts res.body
         end
       else
-        puts "#{pad} failed".colorize :red
+        puts "#{pad} failed".red
       end
     end
 
@@ -93,7 +97,7 @@ module Hackpad
     end
 
     def extract(s)
-      unescape(s).gsub(/<b class="hit">([^<]*)<\/b>/) { |e| $1.colorize(:cyan).bold }
+      unescape(s).gsub(/<b class="hit">([^<]*)<\/b>/) { |e| $1.cyan.bold }
     end
 
   end

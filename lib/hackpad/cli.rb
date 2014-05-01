@@ -1,5 +1,4 @@
 require "thor"
-require "colorize"
 require "yaml"
 require_relative "client"
 
@@ -16,6 +15,12 @@ module Hackpad
       aliases: "-w",
       default: "default",
       desc: "Name of the workspace to use."
+
+    class_option :plain,
+      aliases: "-p",
+      type: 'boolean',
+      default: false,
+      desc: "Add this if you don't want colors."
 
     default_task :help
 
