@@ -44,6 +44,13 @@ module Hackpad
       Hackpad::Client.new(options).show pad, format
     end
 
+    desc "colors", "displays colorize color matrix."
+    option :hide
+    def colors
+      require 'colorize'
+      String.color_matrix ' xoxo '
+    end
+
   end
 
 end
