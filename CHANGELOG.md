@@ -1,9 +1,11 @@
 Hackpad-cli changelog
 ==========================
 
-v0.0.4 - wip
+v0.0.4 - 2014-04-01
 --------------------
 
+* add options in pad info for `hpcli info [pad_id]`
+* implement a search command `hpcli search [term]`
 
 v0.0.3 - 2014-04-01
 --------------

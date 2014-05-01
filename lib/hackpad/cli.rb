@@ -19,13 +19,18 @@ module Hackpad
 
     default_task :help
 
+    desc "search [term]", "Lists available pads matching [term]."
+    def search(term)
+      Hackpad::Client.new(options).search term
+    end
+
     desc "list", "Lists available pads."
     def list
       Hackpad::Client.new(options).listall
     end
 
     desc "getinfo [pad_id]", "gets info for the pad <pad_id>."
-    def getinfo(pad)
+    def info(pad)
       Hackpad::Client.new(options).getinfo pad
     end
 
