@@ -1,6 +1,14 @@
 Hackpad-Cli
 ===================
 
+[![Gem Version](https://badge.fury.io/rb/hackpad-cli.png)](http://rubygems.org/gems/hackpad-cli)
+[![Build Status](https://travis-ci.org/mose/hackpad-cli.png?branch=master)](https://travis-ci.org/mose/hackpad-cli)
+[![Coverage Status](https://coveralls.io/repos/mose/hackpad-cli/badge.png)](https://coveralls.io/r/mose/hackpad-cli)
+[![Dependency Status](https://gemnasium.com/mose/hackpad-cli.svg)](https://gemnasium.com/mose/hackpad-cli)
+[![Code Climate](https://codeclimate.com/github/mose/hackpad-cli.png)](https://codeclimate.com/github/mose/hackpad-cli)
+
+----
+
 This is a command-line utility to check and manipulate hackpad documents.
 It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf and was tested with ruby 1.9.3 and 2.1.1.
 
