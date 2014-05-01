@@ -40,7 +40,7 @@ module Hackpad
       end
     end
 
-    def listall
+    def list
       res = @token.get "/api/1.0/pads/all"
       if res.is_a? Net::HTTPSuccess
         all = JSON.parse res.body
@@ -54,7 +54,7 @@ module Hackpad
       end
     end
 
-    def getinfo(pad)
+    def info(pad)
       res = @token.get "/api/1.0/pad/#{pad}/content.txt"
       if res.is_a? Net::HTTPSuccess
         printf "%-20s %s\n", "Id", "#{pad}".bold

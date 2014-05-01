@@ -20,8 +20,8 @@ module Hackpad
     def setup(configfile)
       config = {}
       FileUtils.mkdir_p File.dirname(configfile)
-      puts "We need first to initialize your hackpad-cli configuration.".colorize(:blue)
-      puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/"
+      puts "We need first to initialize your hackpad-cli configuration.".blue
+      puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/".light_blue
       print "What is your Client ID?  "
       STDOUT.flush
       config['client_id'] = STDIN.gets.chomp

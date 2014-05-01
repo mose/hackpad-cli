@@ -31,12 +31,12 @@ module Hackpad
 
     desc "list", "Lists available pads."
     def list
-      Hackpad::Client.new(options).listall
+      Hackpad::Client.new(options).list
     end
 
-    desc "getinfo [pad_id]", "gets info for the pad <pad_id>."
+    desc "info [pad_id]", "gets info for the pad <pad_id>."
     def info(pad)
-      Hackpad::Client.new(options).getinfo pad
+      Hackpad::Client.new(options).info pad
     end
 
     desc "show [pad_id] [format]", "shows pad <pad_id> in format [html,txt,md] (default txt)."
