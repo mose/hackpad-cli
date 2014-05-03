@@ -47,7 +47,7 @@ module Hackpad
 
       desc "version", "Displays the hackpad-cli version."
       def version
-        Hackpad::Cli.VERSION
+        puts Hackpad::Cli::VERSION
       end
 
 

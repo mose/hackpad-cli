@@ -1,11 +1,9 @@
-require 'oauth'
-require 'net/http'
-require 'json'
-require 'cgi'
 require 'reverse_markdown'
 require 'colorize'
 
 require_relative 'config'
+require_relative 'requester'
+require_relative '../pad'
 
 module Hackpad
   module Cli
@@ -13,13 +11,7 @@ module Hackpad
 
       def initialize(options)
         @config = Config.load options
-        site = URI.parse @config['site']
-        consumer = OAuth::Consumer.new(
-          @config['client_id'],
-          @config['secret'],
-          site: @config['site']
-        )
-        @token = OAuth::AccessToken.new consumer
+        @requester = Requester.new @config
         if options[:plain]
           load File.expand_path('../plain_colors.rb', __FILE__)
         end
@@ -27,67 +19,40 @@ module Hackpad
 
       # GET /api/1.0/pads/all
       def search(term,start=0)
-        res = @token.get "/api/1.0/search?q=#{CGI.escape term}&start=#{start}&limit=100"
-        if res.is_a? Net::HTTPSuccess
-          all = JSON.parse res.body
-          all.each do |a|
-            puts "#{a['id'].bold} - #{unescape(a['title']).yellow}\n   #{extract a['snippet']}"
-          end
-
-        else
-          puts "#{res.inspect}".red
-          puts "#{res.body}".red
-          return back
+        payload = @requester.search(term,start)
+        payload.each do |a|
+          puts "#{a['id'].bold} - #{unescape(a['title']).yellow}\n   #{extract a['snippet']}"
         end
       end
 
       def list
-        res = @token.get "/api/1.0/pads/all"
-        if res.is_a? Net::HTTPSuccess
-          all = JSON.parse res.body
-          all.each do |a|
-            getinfo(a)
-          end
-        else
-          puts "#{res.inspect}".red
-          puts "#{res.body}".red
-          return back
+        all = @requester.list
+        all.each do |id|
+          puts "#{@config['site']}/#{id} - #{@requester.title id}"
         end
       end
 
-      def info(pad)
-        res = @token.get "/api/1.0/pad/#{pad}/content.txt"
-        if res.is_a? Net::HTTPSuccess
-          printf "%-20s %s\n", "Id", "#{pad}".bold
-          printf "%-20s %s\n", "Title", "#{res.body.lines.first.chomp}".yellow
-          printf "%-20s %s\n", "URI", "#{@config['site']}/#{pad}"
-          printf "%-20s %s\n", "Size", "#{res.body.length} chars"
-        else
-          puts "#{pad} failed".red
-        end
-        res = @token.get "/api/1.0/pad/#{pad}/options"
-        if res.is_a? Net::HTTPSuccess
-          a = JSON.parse res.body
-          printf "%-20s %s\n", "Guest Policy", "#{a['options']['guestPolicy']}"
-          printf "%-20s %s\n", "Moderated", "#{a['options']['isModerated'] || "No"}"
-        else
-          puts "#{pad} failed".red
-        end
+      def info(id)
+        padinfo = @requester.show id, 'txt'
+        padoptions = @requester.options id
+        puts padoptions.inspect if ENV['DEBUG']
+        pad = Pad.new id, padinfo, padoptions['options']
+        table "Id", "#{id}".bold
+        table "Title", "#{pad.title}".yellow
+        table "URI", "#{@config['site']}/#{id}"
+        table "Chars", "#{pad.chars}"
+        table "Lines", "#{pad.lines}"
+        table "Guest Policy", "#{pad.guest_policy}"
+        table "Moderated", "#{pad.moderated}"
       end
 
-      def show(pad,format)
+      def show(id,format)
         ext = (format == 'md') ? 'html' : format
-        res = @token.get "/api/1.0/pad/#{pad}/content.#{ext}"
-        if res.is_a? Net::HTTPSuccess
-          puts "#{@config['site']}/#{pad}"
-          puts
-          if format == 'md'
-            puts ReverseMarkdown.convert(res.body, github_flavored: true)
-          else
-            puts res.body
-          end
+        payload = @requester.show id, ext
+        if format == 'md'
+          puts ReverseMarkdown.convert(payload, github_flavored: true)
         else
-          puts "#{pad} failed".red
+          puts payload
         end
       end
 
@@ -99,6 +64,10 @@ module Hackpad
 
       def extract(s)
         unescape(s).gsub(/<b class="hit">([^<]*)<\/b>/) { |e| $1.cyan.bold }
+      end
+
+      def table(key,value)
+        printf "%-20s %s\n", key, value
       end
 
     end
