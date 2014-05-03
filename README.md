@@ -33,11 +33,22 @@ Usage
 
 (use `bundle exec` if you need, mostly in clone mode when not using rvm)
 
-    hpcli                 # will show help
-    hpcli list            # gets a list of pads you have access to
-    hpcli get <pad_id> md # will spit out the content in nice markdown
-    # and you can use alternate config
-    hpcli list -w alt
+```
+Commands:
+  hpcli help [COMMAND]          # Describe available commands or one specific command
+  hpcli info [pad_id]           # gets info for the pad <pad_id>.
+  hpcli list                    # Lists available pads.
+  hpcli search [term]           # Lists available pads matching [term].
+  hpcli show [pad_id] [format]  # shows pad <pad_id> in format [html,txt,md] (default txt).
+  hpcli version                 # Displays the hackpad-cli version.
+
+Options:
+  -c, [--configdir=CONFIGDIR]  # Path to the hackpad-cli directory to use.
+                               # Default: /home/mose/.hackpad-cli/
+  -w, [--workspace=WORKSPACE]  # Name of the workspace to use.
+                               # Default: default
+  -p, [--plain], [--no-plain]  # Add this if you don't want colors.
+```
 
 At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is .. default.yml). If you pass the `-w whatever` option at the end, it will ask questions again to write whatever.yml config file.
 
@@ -47,15 +58,18 @@ Roadmap and todoz
 
 Check the [Changelog](CHANGELOG.md) for past evolutions.
 
-* cache the pads list in a local storage
-* refresh cache according to last cached date
-* add commands for creating a new pad, linked to $EDITOR
-* add admin commands for managing users
-* nag hackpad for they add REST endpoints to query collections
-* write proper tests
-* <s>add freaking cool badges on the readme</s>
-* add a gateway to github so a pad could be copied over a wiki page directly or in a repo somehow
-* implement pretty much all what the hackpad API v1 offers
+- for v0.1.0
+  - <s>add freaking cool badges on the readme</s>
+  - cache the pads list in a local storage
+  - refresh cache according to last cached date
+  - write proper tests
+- for v0.2.0
+  - add commands for creating a new pad, linked to $EDITOR
+  - add a gateway to github so a pad could be copied over a wiki page directly or in a repo somehow
+- for v0.3.0
+  - add admin commands for managing users
+  - implement pretty much all what the hackpad API v1 offers
+  - nag hackpad for they add REST endpoints to query collections
 
 Contributing
 ------------------
