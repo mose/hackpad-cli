@@ -1,17 +1,17 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require "hackpad/cli"
-require "hackpad/client"
+require "hackpad/cli/runner"
+require "hackpad/cli/client"
 
-describe Hackpad::Cli do
+describe Hackpad::Cli::Runner do
 
   before :each do
-    @cli = Hackpad::Cli.new
+    @cli = Hackpad::Cli::Runner.new
   end
 
   it "calls the search method in client class" do
-    Hackpad::Client.stub(:new, {}).and_return(Object)
+    Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
     Object.stub(:search)
     @cli.shell.mute do
       @cli.search "xxx"
@@ -19,7 +19,7 @@ describe Hackpad::Cli do
   end
 
   it "calls the list method in client class" do
-    Hackpad::Client.stub(:new, {}).and_return(Object)
+    Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
     Object.stub(:list)
     @cli.shell.mute do
       @cli.list
@@ -27,7 +27,7 @@ describe Hackpad::Cli do
   end
 
   it "calls the list method in client class" do
-    Hackpad::Client.stub(:new, {}).and_return(Object)
+    Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
     Object.stub(:list)
     @cli.shell.mute do
       @cli.list
@@ -35,7 +35,7 @@ describe Hackpad::Cli do
   end
 
   it "calls the info method in client class" do
-    Hackpad::Client.stub(:new, {}).and_return(Object)
+    Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
     Object.stub(:info)
     @cli.shell.mute do
       @cli.info 'pad'
@@ -43,7 +43,7 @@ describe Hackpad::Cli do
   end
 
   it "calls the show method in client class" do
-    Hackpad::Client.stub(:new, {}).and_return(Object)
+    Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
     Object.stub(:show)
     @cli.shell.mute do
       @cli.show 'pad', 'md'

@@ -1,7 +1,5 @@
-require "thor"
-
 module Hackpad
-  class Cli < Thor
+  module Cli
     VERSION = "0.0.5"
   end
 end
