@@ -5,7 +5,7 @@ module Hackpad
 
     def initialize(id, content, options)
       @id = id
-      @content = content || Nullpad.content
+      @content = content
       @guest_policy = options['guestPolicy']
       @moderated = !!options['isModerated']
     end
@@ -22,14 +22,6 @@ module Hackpad
       @content.lines.count
     end
 
-  end
-
-  module Nullpad
-    extend self
-
-    def content
-      "Empty"
-    end
   end
 
 end
