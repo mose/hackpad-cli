@@ -2,8 +2,9 @@ require 'reverse_markdown'
 require 'colorize'
 
 require_relative 'config'
-require_relative 'requester'
-require_relative '../pad'
+require_relative 'api'
+require_relative 'store'
+require_relative 'pad'
 
 module Hackpad
   module Cli
@@ -11,7 +12,8 @@ module Hackpad
 
       def initialize(options)
         @config = Config.load options
-        @requester = Requester.new @config
+        Store.prepare @config
+        Api.prepare @config
         if options[:plain]
           load File.expand_path('../plain_colors.rb', __FILE__)
         end
@@ -19,24 +21,23 @@ module Hackpad
 
       # GET /api/1.0/pads/all
       def search(term,start=0)
-        payload = @requester.search(term,start)
+        payload = Api.search(term,start)
         payload.each do |a|
           puts "#{a['id'].bold} - #{unescape(a['title']).yellow}\n   #{extract a['snippet']}"
         end
       end
 
       def list
-        all = @requester.list
+        all = Api.list
         all.each do |id|
-          puts "#{@config['site']}/#{id} - #{@requester.title id}"
+          pad = Pad.new id
+          puts "#{@config['site']}/#{id} - #{pad.title}"
         end
       end
 
       def info(id)
-        padinfo = @requester.show id, 'txt'
-        padoptions = @requester.options id
-        puts padoptions.inspect if ENV['DEBUG']
-        pad = Pad.new id, padinfo, padoptions['options']
+        pad = Pad.new id
+        pad.load 'txt'
         table "Id", "#{id}".bold
         table "Title", "#{pad.title}".yellow
         table "URI", "#{@config['site']}/#{id}"
@@ -48,7 +49,8 @@ module Hackpad
 
       def show(id,format)
         ext = (format == 'md') ? 'html' : format
-        payload = @requester.show id, ext
+        pad = Pad.new id
+        payload = pad.load ext
         if format == 'md'
           puts ReverseMarkdown.convert(payload, github_flavored: true)
         else

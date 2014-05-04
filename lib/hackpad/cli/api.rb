@@ -8,9 +8,10 @@ module Hackpad
     class ApiException < StandardError
     end
 
-    class Requester
+    module Api
+      extend self
 
-      def initialize(config)
+      def prepare(config)
         site = URI.parse config['site']
         consumer = OAuth::Consumer.new(
           config['client_id'],
@@ -32,11 +33,11 @@ module Hackpad
         show(id, 'txt').lines.first
       end
 
-      def options(id)
+      def read_options(id)
         get "/api/1.0/pad/#{id}/options"
       end
 
-      def show(id, ext)
+      def read(id, ext)
         get "/api/1.0/pad/#{id}/content.#{ext}", false
       end
 
