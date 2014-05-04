@@ -34,6 +34,7 @@ module Hackpad
         raise UndefinedPad unless @id
         if refresh or !Store.exists? id, ext
           @content = Api.read id, ext
+          Store.save self, ext
           options = Api.read_options id
           @guest_policy = options['guestPolicy']
           @moderated = !!options['isModerated']

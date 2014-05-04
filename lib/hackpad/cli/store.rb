@@ -1,4 +1,5 @@
 require 'json'
+require_relative '../cli'
 
 module Hackpad
   module Cli
@@ -34,7 +35,7 @@ module Hackpad
         File.read(file)
       end
 
-      def read_meta(id)
+      def read_options(id)
         file = File.join(@pads_dir, 'meta', id)
         JSON.parse File.read(file)
       end

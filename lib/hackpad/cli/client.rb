@@ -12,7 +12,7 @@ module Hackpad
 
       def initialize(options)
         @config = Config.load options
-        Store.prepare @config
+        Store.prepare options
         Api.prepare @config
         if options[:plain]
           load File.expand_path('../plain_colors.rb', __FILE__)
@@ -50,11 +50,11 @@ module Hackpad
       def show(id,format)
         ext = (format == 'md') ? 'html' : format
         pad = Pad.new id
-        payload = pad.load ext
+        pad.load ext
         if format == 'md'
-          puts ReverseMarkdown.convert(payload, github_flavored: true)
+          puts ReverseMarkdown.convert(pad.content, github_flavored: true)
         else
-          puts payload
+          puts pad.content
         end
       end
 
