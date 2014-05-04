@@ -5,16 +5,18 @@ require_relative 'config'
 require_relative 'api'
 require_relative 'store'
 require_relative 'pad'
+require_relative 'padlist'
 
 module Hackpad
   module Cli
     class Client
 
       def initialize(options)
-        @config = Config.load options
-        Store.prepare options
+        @options = options
+        Store.prepare @options
+        @config = Config.load @options
         Api.prepare @config
-        if options[:plain]
+        if @options[:plain]
           load File.expand_path('../plain_colors.rb', __FILE__)
         end
       end
@@ -23,16 +25,16 @@ module Hackpad
       def search(term,start=0)
         payload = Api.search(term,start)
         payload.each do |a|
-          puts "#{a['id'].bold} - #{unescape(a['title']).yellow}\n   #{extract a['snippet']}"
+          puts "#{(@config['site'] + '/') if @options['urls']}#{a['id'].bold} - #{unescape(a['title']).yellow}"
+          puts "   #{extract a['snippet']}"
         end
       end
 
       def list
-        all = Api.list
-        all.each do |id|
-          pad = Pad.new id
-          puts "#{@config['site']}/#{id} - #{pad.title}"
-        end
+        padlist = Padlist.new @options['refresh']
+        puts padlist.all.map { |pad|
+          "#{(@config['site'] + '/') if @options['urls']}#{pad.id} - #{pad.title}"
+        }
       end
 
       def info(id)

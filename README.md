@@ -60,8 +60,9 @@ Check the [Changelog](CHANGELOG.md) for past evolutions.
 
 - for v0.1.0
   - <s>add freaking cool badges on the readme</s>
-  - cache the pads list in a local storage
-  - refresh cache according to last cached date
+  - <s>cache the pads list in a local storage</s>
+  - <s>have a choice to refresh cache</s>
+  - display cached date in output
   - write proper tests
 - for v0.2.0
   - add commands for creating a new pad, linked to $EDITOR

@@ -17,6 +17,18 @@ module Hackpad
         default: "default",
         desc: "Name of the workspace to use."
 
+      class_option :refresh,
+        aliases: "-r",
+        type: 'boolean',
+        default: false,
+        desc: "Add this if you want refresh the cache."
+
+      class_option :urls,
+        aliases: "-u",
+        type: 'boolean',
+        default: false,
+        desc: "Displays urls rather than pad ids."
+
       class_option :plain,
         aliases: "-p",
         type: 'boolean',

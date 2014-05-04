@@ -12,13 +12,12 @@ module Hackpad
 
       attr_reader :id, :content, :guest_policy, :moderated
 
-
       def initialize(id)
         @id = id
       end
 
       def title
-        @content.lines.first.strip if @content
+        @title ||= (@content.lines.first.strip if @content)
       end
 
       def chars
@@ -32,7 +31,7 @@ module Hackpad
       def load(ext, refresh=false)
         raise UnknownFormat unless FORMATS.include? ext
         raise UndefinedPad unless @id
-        if refresh or !Store.exists? id, ext
+        if refresh or !Store.exists? ext, id
           @content = Api.read id, ext
           Store.save self, ext
           options = Api.read_options id
