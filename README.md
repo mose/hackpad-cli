@@ -13,9 +13,9 @@ This is a command-line utility to check and manipulate hackpad documents.
 It uses Hackpad REST API 1.0 https://hackpad.com/fQD2DRz22Wf and was tested with ruby 1.9.3 and 2.1.1.
 
 Initially this tool was created to overcome the frustration of the md export of pads,
-because we need to copy them to other places sometimes. Proper markdown would be appreciated.
+because we need to copy them to other places sometimes. Proper markdown would be appreciated. It does that by transforming the html in markdown with the https://github.com/xijo/reverse_markdown gem.
 
-So for now, it does that, by transforming the html in markdown with the https://github.com/xijo/reverse_markdown gem.
+Then it felt right to cache the pads content and list because then we can browse and search in the whole workspace very fast. So by default the `list`, `show` and `info` are cached unless you pass the `-r` option at the end of the commandline. Note that the longest is the `list` because the API don't provide pads titles, so `hpcli list` actually downloads the whole list of the pads in txt format. But it makes the `info` and the `show` very fast after that.
 
 Installation
 ------------------
@@ -43,11 +43,13 @@ Commands:
   hpcli version                 # Displays the hackpad-cli version.
 
 Options:
-  -c, [--configdir=CONFIGDIR]  # Path to the hackpad-cli directory to use.
-                               # Default: /home/mose/.hackpad-cli/
-  -w, [--workspace=WORKSPACE]  # Name of the workspace to use.
-                               # Default: default
-  -p, [--plain], [--no-plain]  # Add this if you don't want colors.
+  -c, [--configdir=CONFIGDIR]      # Path to the hackpad-cli directory to use.
+                                   # Default: /home/mose/.hackpad-cli/
+  -w, [--workspace=WORKSPACE]      # Name of the workspace to use.
+                                   # Default: default
+  -r, [--refresh], [--no-refresh]  # Add this if you want refresh the cache.
+  -u, [--urls], [--no-urls]        # Displays urls rather than pad ids.
+  -p, [--plain], [--no-plain]      # Add this if you don't want colors.
 ```
 
 At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is .. default.yml). If you pass the `-w whatever` option at the end, it will ask questions again to write whatever.yml config file.
