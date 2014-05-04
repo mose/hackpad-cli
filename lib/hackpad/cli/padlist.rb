@@ -1,3 +1,4 @@
+require 'ostruct'
 require_relative "store"
 require_relative "api"
 require_relative "pad"

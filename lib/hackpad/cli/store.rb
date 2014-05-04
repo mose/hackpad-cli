@@ -1,4 +1,5 @@
 require 'json'
+require 'ostruct'
 require_relative '../cli'
 
 module Hackpad
