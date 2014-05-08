@@ -6,7 +6,7 @@ require "hackpad/cli/store"
 describe Hackpad::Cli::Store do
 
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
-  let(:options) { { "configdir" => configdir, "workspace" => 'default' } }
+  let(:options) { { configdir: configdir, workspace: 'default' } }
 
   before :each do
     subject.prepare options
@@ -26,7 +26,7 @@ describe Hackpad::Cli::Store do
   describe ".exists?" do
 
     context "when refresh option is set," do
-      let(:options) { { "configdir" => configdir, "workspace" => 'default', 'refresh' => true } }
+      let(:options) { { configdir: configdir, workspace: 'default', refresh: true } }
       before {
         subject.prepare options
         FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx')

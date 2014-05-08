@@ -8,8 +8,8 @@ module Hackpad
       extend self
 
       def prepare(config)
-        @refresh = config['refresh']
-        dir = File.join(config['configdir'], config['workspace'])
+        @refresh = config[:refresh]
+        dir = File.join(config[:configdir], config[:workspace])
         @pads_dir = File.join(dir, 'pads')
         @list_cache = File.join(dir, 'pads.list')
         prepare_dirs @pads_dir

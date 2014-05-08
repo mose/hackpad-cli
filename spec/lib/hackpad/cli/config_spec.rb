@@ -5,7 +5,6 @@ require "hackpad/cli/config"
 
 describe Hackpad::Cli::Config do
 
-
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
   let(:configfile) { File.join(configdir, 'default.yml') }
   let(:options) { { configdir: configdir, workspace: 'default' } }
@@ -16,7 +15,6 @@ describe Hackpad::Cli::Config do
 
   after :each do
     FileUtils.rm configfile if File.exists? configfile
-    FileUtils.rm_rf configdir if Dir.exists? configdir
   end
 
   describe ".load" do
@@ -36,10 +34,11 @@ describe Hackpad::Cli::Config do
 
   describe ".setup" do
     context "when normal input is provided," do
-      module Kernel; def puts(x); end; def print(x); end;end
+      let(:input) { StringIO.new }
+      let(:output) { StringIO.new }
       it "handles setup interactively" do
-        STDIN.stub(:gets).and_return("client_id","secret","site")
-        subject.send :setup, configfile
+        input.stub(:gets).and_return("client_id","secret","site")
+        subject.send :setup, configfile, input, output
         expect(File.read configfile).to eq "---\nclient_id: client_id\nsecret: secret\nsite: site\n"
       end
     end

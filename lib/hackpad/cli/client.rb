@@ -25,7 +25,7 @@ module Hackpad
       def search(term,start=0)
         payload = Api.search(term,start)
         payload.each do |a|
-          puts "#{(@config['site'] + '/') if @options['urls']}#{a['id'].bold} - #{unescape(a['title']).yellow}"
+          puts "#{(@config['site'] + '/') if @options[:urls]}#{a['id'].bold} - #{unescape(a['title']).yellow}"
           puts "   #{extract a['snippet']}"
         end
       end
@@ -33,7 +33,7 @@ module Hackpad
       def list
         padlist = Padlist.new @options['refresh']
         puts padlist.all.map { |pad|
-          "#{(@config['site'] + '/') if @options['urls']}#{pad.id} - #{pad.title}"
+          "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
         }
       end
 

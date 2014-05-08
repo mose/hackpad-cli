@@ -12,8 +12,8 @@ describe Hackpad::Cli::Pad do
     Hackpad::Cli::Api.stub(:read).with('123', 'txt').and_return("content\nand body")
     Hackpad::Cli::Api.stub(:read_options).with('123').and_return({"success" => "true"})
     options = {
-      "configdir" => File.expand_path('../../../../files', __FILE__),
-      "workspace" => 'default'
+      configdir: File.expand_path('../../../../files', __FILE__),
+      workspace: 'default'
     }
     Hackpad::Cli::Store.prepare options
     @pad = Hackpad::Cli::Pad.new "123"
