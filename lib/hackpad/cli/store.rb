@@ -9,11 +9,14 @@ module Hackpad
 
       def prepare(config)
         @refresh = config['refresh']
-        @dir = File.join(config['configdir'], config['workspace'])
-        @pads_dir = File.join(@dir, 'pads')
-        @list_cache = File.join(@dir, 'pads.list')
-        FileUtils.mkdir_p @dir unless Dir.exists?(@dir)
-        (Hackpad::Cli::FORMATS + ['meta']).each { |f| FileUtils.mkdir_p File.join(@pads_dir, f) }
+        dir = File.join(config['configdir'], config['workspace'])
+        @pads_dir = File.join(dir, 'pads')
+        @list_cache = File.join(dir, 'pads.list')
+        prepare_dirs @pads_dir
+      end
+
+      def prepare_dirs(base)
+        (Hackpad::Cli::FORMATS + ['meta']).each { |f| FileUtils.mkdir_p File.join(base, f) }
       end
 
       def exists?(*path)
