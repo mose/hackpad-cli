@@ -5,8 +5,8 @@ require 'bundler'
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
-require 'coveralls'
-Coveralls.wear!
+#require 'coveralls'
+#Coveralls.wear!
 
 RSpec.configure do |config|
   config.mock_with :rspec
