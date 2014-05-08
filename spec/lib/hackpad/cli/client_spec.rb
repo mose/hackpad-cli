@@ -60,8 +60,27 @@ describe Hackpad::Cli::Client do
     end
   end
 
-  pending "Hackpad::Cli::Client.search"
-  pending "Hackpad::Cli::Client.list"
+  describe ".list" do
+    before { Hackpad::Cli::Api.stub(:prepare) }
+    before { Hackpad::Cli::Store.stub(:prepare) }
+    before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
+    before { Hackpad::Cli::Padlist.stub(:get_list).and_return( [ OpenStruct.new( id: 'xxxxxx', title: 'xtitle' ) ] ) }
+    context "when default options are used," do
+      let(:client) { Hackpad::Cli::Client.new options }
+      it {
+        expect(STDOUT).to receive(:puts).with(["xxxxxx - xtitle"])
+        client.list
+      }
+    end
+    context "when options sets urls to true," do
+      let(:client) { Hackpad::Cli::Client.new options.merge({urls: true}) }
+      it {
+        expect(STDOUT).to receive(:puts).with(["http://test.dev/xxxxxx - xtitle"])
+        client.list
+      }
+    end
+  end
+
   pending "Hackpad::Cli::Client.info"
   pending "Hackpad::Cli::Client.show"
 

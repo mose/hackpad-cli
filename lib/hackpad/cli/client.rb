@@ -31,8 +31,7 @@ module Hackpad
       end
 
       def list
-        padlist = Padlist.new @options['refresh']
-        puts padlist.all.map { |pad|
+        puts Padlist.get_list(@options['refresh']).map { |pad|
           "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
         }
       end

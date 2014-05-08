@@ -5,26 +5,26 @@ require_relative "pad"
 
 module Hackpad
   module Cli
-    class Padlist
+    module Padlist
+      extend self
 
-      attr_reader :all
-
-      def initialize(refresh=false)
+      def get_list(refresh=false)
+        all = []
         if refresh or !Store.exists? "padlist"
           print "Refreshing "
           list = Api.list
-          @all = []
           list.each do |a|
             print "."
             pad = Pad.new a
             pad.load 'txt', refresh
-            @all << OpenStruct.new( id: a, title: pad.title )
+            all << OpenStruct.new( id: a, title: pad.title )
           end
           puts " all done."
           Store.save_list all
         else
-          @all = Store.read_list
+          all = Store.read_list
         end
+        all
       end
 
     end
