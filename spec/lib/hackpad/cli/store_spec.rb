@@ -11,12 +11,12 @@ describe Hackpad::Cli::Store do
       "configdir" => @configdir,
       "workspace" => 'default'
     }
-    Hackpad::Cli::Store.prepare options
+    subject.prepare options
   end
 
   it "reads pads list from file" do
     File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g third")
-    list = Hackpad::Cli::Store.read_list
+    list = subject.read_list
     expect(list).to be_an Array
     expect(list[0]).to be_an OpenStruct
     expect(list[0].id).to eq "gy23ui"
@@ -28,12 +28,12 @@ describe Hackpad::Cli::Store do
   context "it knows when it needs to request api" do
 
     it "return false if file don't exist" do
-      expect(Hackpad::Cli::Store.exists? 'txt', 'xxx').to be false
+      expect(subject.exists? 'txt', 'xxx').to be false
     end
 
     it "return true if file exists" do
       FileUtils.touch File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
-      expect(Hackpad::Cli::Store.exists? 'txt', 'xxx').to be true
+      expect(subject.exists? 'txt', 'xxx').to be true
       FileUtils.rm File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
     end
 
@@ -43,9 +43,9 @@ describe Hackpad::Cli::Store do
         "workspace" => 'default',
         'refresh' => true
       }
-      Hackpad::Cli::Store.prepare options
+      subject.prepare options
       FileUtils.touch File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
-      expect(Hackpad::Cli::Store.exists? 'txt', 'xxx').to be false
+      expect(subject.exists? 'txt', 'xxx').to be false
       FileUtils.rm File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
     end
 

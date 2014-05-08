@@ -1,3 +1,5 @@
+require 'colorize'
+
 module Hackpad
   module Cli
     module Config
@@ -24,8 +26,8 @@ module Hackpad
         puts "We need first to initialize your hackpad-cli configuration.".blue
         puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/".light_blue
         print "What is your Client ID?  "
-        STDOUT.flush
         config['client_id'] = STDIN.gets.chomp
+        STDOUT.flush
         print "What is your Secret Key? "
         STDOUT.flush
         config['secret'] = STDIN.gets.chomp
