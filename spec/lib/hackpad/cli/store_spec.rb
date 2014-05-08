@@ -5,48 +5,46 @@ require "hackpad/cli/store"
 
 describe Hackpad::Cli::Store do
 
+  let(:configdir) { File.expand_path('../../../../files', __FILE__) }
+  let(:options) { { "configdir" => configdir, "workspace" => 'default' } }
+
   before :each do
-    @configdir = File.expand_path('../../../../files', __FILE__)
-    options = {
-      "configdir" => @configdir,
-      "workspace" => 'default'
-    }
     subject.prepare options
   end
 
-  it "reads pads list from file" do
-    File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g third")
-    list = subject.read_list
-    expect(list).to be_an Array
-    expect(list[0]).to be_an OpenStruct
-    expect(list[0].id).to eq "gy23ui"
-    expect(list[0].title).to eq "first one"
-    expect(list[2].id).to eq "23489g"
-    expect(list[2].title).to eq "third"
+  describe ".read_list" do
+    before { File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g third") }
+    let(:list) { subject.read_list }
+    it { expect(list).to be_an Array }
+    it { expect(list[0]).to be_an OpenStruct }
+    it { expect(list[0].id).to eq "gy23ui" }
+    it { expect(list[0].title).to eq "first one" }
+    it { expect(list[2].id).to eq "23489g" }
+    it { expect(list[2].title).to eq "third" }
   end
 
-  context "it knows when it needs to request api" do
+  describe ".exists?" do
 
-    it "return false if file don't exist" do
-      expect(subject.exists? 'txt', 'xxx').to be false
-    end
-
-    it "return true if file exists" do
-      FileUtils.touch File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
-      expect(subject.exists? 'txt', 'xxx').to be true
-      FileUtils.rm File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
-    end
-
-    it "return false if file exists but option is set to refresh" do
-      options = {
-        "configdir" => @configdir,
-        "workspace" => 'default',
-        'refresh' => true
+    context "when refresh option is set," do
+      let(:options) { { "configdir" => configdir, "workspace" => 'default', 'refresh' => true } }
+      before {
+        subject.prepare options
+        FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx')
       }
-      subject.prepare options
-      FileUtils.touch File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
-      expect(subject.exists? 'txt', 'xxx').to be false
-      FileUtils.rm File.join(@configdir, 'default', 'pads', 'txt', 'xxx')
+      after { FileUtils.rm File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
+      it { expect(subject.exists? 'txt', 'xxx').to be false }
+    end
+
+    context "when refresh option is not set," do
+      context "when config file don't exist," do
+        it { expect(subject.exists? 'txt', 'xxx').to be false }
+      end
+
+      context "when configfile exists," do
+        before { FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
+        after { FileUtils.rm File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
+        it { expect(subject.exists? 'txt', 'xxx').to be true }
+      end
     end
 
   end

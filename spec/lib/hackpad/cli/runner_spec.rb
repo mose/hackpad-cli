@@ -6,43 +6,44 @@ require "hackpad/cli/client"
 
 describe Hackpad::Cli::Runner do
 
+  let(:cli) { Hackpad::Cli::Runner.new }
+
   before :each do
-    @cli = Hackpad::Cli::Runner.new
     Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
   end
 
   it "calls the search method in client class" do
     Object.stub(:search)
-    @cli.shell.mute do
-      @cli.search "xxx"
+    cli.shell.mute do
+      cli.search "xxx"
     end
   end
 
   it "calls the list method in client class" do
     Object.stub(:list)
-    @cli.shell.mute do
-      @cli.list
+    cli.shell.mute do
+      cli.list
     end
   end
 
   it "calls the list method in client class" do
     Object.stub(:list)
-    @cli.shell.mute do
-      @cli.list
+    cli.shell.mute do
+      cli.list
     end
   end
 
   it "calls the info method in client class" do
     Object.stub(:info)
-    @cli.shell.mute do
-      @cli.info 'pad'
+    cli.shell.mute do
+      cli.info 'pad'
     end
   end
 
   it "calls the show method in client class" do
     Object.stub(:show)
-    @cli.shell.mute do
-      @cli.show 'pad', 'md'
+    cli.shell.mute do
+      cli.show 'pad', 'md'
     end
   end
 
