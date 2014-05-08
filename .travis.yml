@@ -3,4 +3,5 @@ cache: bundler
 rvm:
   - 1.9.3
   - 2.1.1
-
+env:
+  - CODECLIMATE_REPO_TOKEN=f9bb5b9352f92003aa2698ab65c257a1dd5c0959e88fae3ada9a5d2592dd33ec

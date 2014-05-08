@@ -2,6 +2,9 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'rubygems'
 require 'bundler'
 
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 require 'coveralls'
 Coveralls.wear!
 
