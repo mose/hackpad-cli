@@ -5,6 +5,7 @@ require "hackpad/cli/client"
 
 describe Hackpad::Cli::Client do
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
+  let(:options) { { configdir: configdir, workspace: 'default' } }
 
   describe ".new" do
     before { Hackpad::Cli::Api.stub(:prepare) }
@@ -12,10 +13,6 @@ describe Hackpad::Cli::Client do
     before { Hackpad::Cli::Config.stub(:load) }
 
     context "when default options are passed," do
-      let(:options) { {
-        configdir: configdir,
-        workspace: 'default'
-      } }
       let(:client) { Hackpad::Cli::Client.new options }
       it { expect(client).to be_a Hackpad::Cli::Client }
       context "when colorization is expected," do
@@ -24,23 +21,15 @@ describe Hackpad::Cli::Client do
     end
 
     context "when plain text is required," do
-      let(:options) { {
-        configdir: configdir,
-        workspace: 'default',
-        plain: true
-      } }
       context "when colorization is not expected," do
-        before { Hackpad::Cli::Client.new options }
+        before { Hackpad::Cli::Client.new options.merge({plain: true}) }
+        after { load "colorize.rb" }
         it { expect("x".blue).to eq "x" }
       end
     end
   end
 
   describe ".search" do
-    let(:options) { {
-      configdir: configdir,
-      workspace: 'default'
-    } }
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
     before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
@@ -49,28 +38,23 @@ describe Hackpad::Cli::Client do
         [ {
           "title" => "xtitle",
           "id" => "xxxxxx",
-          "snippet" => "context <b>x</b> context"
+          "snippet" => "context <b class=\"hit\">x</b> context"
         } ]
       )
     }
     context "when default options are used," do
       let(:client) { Hackpad::Cli::Client.new options }
       it {
-        expect(STDOUT).to receive(:puts).with("xxxxxx - xtitle")
-        expect(STDOUT).to receive(:puts).with("   context <b>x</b> context")
+        expect(STDOUT).to receive(:puts).with("\e[1;39;49mxxxxxx\e[0m - \e[0;33;49mxtitle\e[0m")
+        expect(STDOUT).to receive(:puts).with("   context \e[1;36;49mx\e[0m context")
         client.search "xxx"
       }
     end
     context "when options sets urls to true," do
-      let(:options) { {
-        configdir: configdir,
-        workspace: 'default',
-        urls: true
-      } }
-      let(:client) { Hackpad::Cli::Client.new options }
+      let(:client) { Hackpad::Cli::Client.new options.merge({urls: true}) }
       it {
-        expect(STDOUT).to receive(:puts).with("http://test.dev/xxxxxx - xtitle")
-        expect(STDOUT).to receive(:puts).with("   context <b>x</b> context")
+        expect(STDOUT).to receive(:puts).with("http://test.dev/\e[1;39;49mxxxxxx\e[0m - \e[0;33;49mxtitle\e[0m")
+        expect(STDOUT).to receive(:puts).with("   context \e[1;36;49mx\e[0m context")
         client.search "xxx"
       }
     end
