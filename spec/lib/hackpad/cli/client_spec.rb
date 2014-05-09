@@ -81,6 +81,18 @@ describe Hackpad::Cli::Client do
     end
   end
 
+  describe ".info" do
+    before { Hackpad::Cli::Api.stub(:prepare) }
+    before { Hackpad::Cli::Store.stub(:prepare) }
+    before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
+    context "when unknown id is given" do
+      pending "todo"
+    end
+    context "when id is an existing pad" do
+
+    end
+  end
+
   pending "Hackpad::Cli::Client.info"
   pending "Hackpad::Cli::Client.show"
 

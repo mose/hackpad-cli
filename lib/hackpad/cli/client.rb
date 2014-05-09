@@ -11,7 +11,8 @@ module Hackpad
   module Cli
     class Client
 
-      def initialize(options)
+      def initialize(options, output=STDOUT)
+        @output = output
         @options = options
         Store.prepare @options
         @config = Config.load @options
@@ -25,13 +26,13 @@ module Hackpad
       def search(term,start=0)
         payload = Api.search(term,start)
         payload.each do |a|
-          puts "#{(@config['site'] + '/') if @options[:urls]}#{a['id'].bold} - #{unescape(a['title']).yellow}"
-          puts "   #{extract a['snippet']}"
+          @output.puts "#{(@config['site'] + '/') if @options[:urls]}#{a['id'].bold} - #{unescape(a['title']).yellow}"
+          @output.puts "   #{extract a['snippet']}"
         end
       end
 
       def list
-        puts Padlist.get_list(@options['refresh']).map { |pad|
+        @output.puts Padlist.get_list(@options['refresh']).map { |pad|
           "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
         }
       end
@@ -53,9 +54,9 @@ module Hackpad
         pad = Pad.new id
         pad.load ext
         if format == 'md'
-          puts ReverseMarkdown.convert(pad.content, github_flavored: true)
+          @output.puts ReverseMarkdown.convert(pad.content, github_flavored: true)
         else
-          puts pad.content
+          @output.puts pad.content
         end
       end
 
@@ -70,7 +71,7 @@ module Hackpad
       end
 
       def table(key,value)
-        printf "%-20s %s\n", key, value
+        @output.printf "%-20s %s\n", key, value
       end
 
     end

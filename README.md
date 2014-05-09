@@ -20,7 +20,7 @@ Offline hackpad reading
 
 It felt right to cache the pads content and list because then we can browse and search in the whole workspace very fast. So by default the `list`, `show` and `info` are cached unless you pass the `-r` option at the end of the commandline. Note that the longest is the `list` because the API don't provide pads titles, so `hpcli list` actually downloads the whole list of the pads in txt format. But it makes the `info` and the `show` very fast after that.
 
-The side effect is that it provides the ability to just refresh the list of pads with `hpcli list`, and it will cache the text version of each pad locally. Then you can `hpcli show <xxx>` without hiting the api.
+The side effect is that it provides the ability to just refresh the list of pads with `hpcli list`, and it will cache the text version of each pad locally. Then you can `hpcli show <xxx>` without hitting the api.
 
 Installation
 ------------------
