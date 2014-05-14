@@ -4,7 +4,7 @@ Hackpad-cli changelog
 v0.0.7 - 2014-05-15
 -------------
 
-- add a `cached_at` value in metadata
+- add a `cached_at` value in metadata, visible in the `show` command
 - fix `info` to display guest policy properly
 - add a `check` command to check if there are new pads and dcide to refresh or not
 - whole lot of more tests
