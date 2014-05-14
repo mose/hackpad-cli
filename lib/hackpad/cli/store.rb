@@ -55,8 +55,8 @@ module Hackpad
 
       def read_list
         File.read(File.join(@pads_dir, 'padlist')).lines.reduce([]) { |a,line|
-          /(?<id>[a-zA-Z0-9]*) (?<title>.*)/ =~ line
-          a << OpenStruct.new( id: id, title: title )
+          /(?<id>[a-zA-Z0-9]*) (\[(?<cached_at>[-a-zA-Z0-9: ]*)\] )?(?<title>.*)/ =~ line
+          a << OpenStruct.new( id: id, title: title, cached_at: cached_at )
           a
         }
       end

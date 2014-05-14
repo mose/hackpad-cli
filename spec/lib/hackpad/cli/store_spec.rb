@@ -13,7 +13,7 @@ describe Hackpad::Cli::Store do
   end
 
   describe ".read_list" do
-    before { File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g third") }
+    before { File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g [some time] third") }
     let(:list) { subject.read_list }
     it { expect(list).to be_an Array }
     it { expect(list[0]).to be_an OpenStruct }
@@ -21,6 +21,7 @@ describe Hackpad::Cli::Store do
     it { expect(list[0].title).to eq "first one" }
     it { expect(list[2].id).to eq "23489g" }
     it { expect(list[2].title).to eq "third" }
+    it { expect(list[2].cached_at).to eq "some time" }
   end
 
   describe ".exists?" do

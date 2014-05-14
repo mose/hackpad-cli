@@ -10,7 +10,7 @@ module Hackpad
 
     class Pad
 
-      attr_reader :id, :content, :guest_policy, :moderated
+      attr_reader :id, :content, :guest_policy, :moderated, :cached_at
 
       def initialize(id)
         @id = id
@@ -42,20 +42,23 @@ module Hackpad
         @content = Api.read @id, ext
         Store.save self, ext
         options = Api.read_options @id
-        @guest_policy = options['guestPolicy']
-        @moderated = !!options['isModerated']
+        @guest_policy = options['options']['guestPolicy']
+        @moderated = !!options['options']['isModerated']
+        options['cached_at'] = Time.now
+        @cached_at = options['cached_at']
         Store.save_meta @id, options
       end
 
       def load_from_cache(ext)
         @content = Store.read @id, ext
         options = Store.read_options @id
-        @guest_policy = options['guestPolicy']
-        @moderated = !!options['isModerated']
+        @guest_policy = options['options']['guestPolicy']
+        @moderated = !!options['options']['isModerated']
+        @cached_at = options['cached_at']
       end
 
       def is_cached?
-        Store.exists? 'txt', @id
+        Store.exists? 'meta', @id
       end
 
     end

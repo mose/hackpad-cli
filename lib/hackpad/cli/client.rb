@@ -33,7 +33,7 @@ module Hackpad
 
       def list
         @output.puts Padlist.get_list(@options['refresh']).map { |pad|
-          "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
+          padline pad
         }
       end
 
@@ -44,7 +44,7 @@ module Hackpad
           @output.puts "There is no new pad."
         else
           @output.puts padlist.map { |pad|
-            "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
+            padline pad
           }
         end
       end
@@ -59,6 +59,7 @@ module Hackpad
         table "Lines", "#{pad.lines}"
         table "Guest Policy", "#{pad.guest_policy}"
         table "Moderated", "#{pad.moderated}"
+        table "Cached", "#{pad.cached_at || 'unknown'}"
       end
 
       def show(id,format)
@@ -73,6 +74,10 @@ module Hackpad
       end
 
     private
+
+      def padline(pad)
+        "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
+      end
 
       def unescape(s)
         CGI.unescapeHTML s

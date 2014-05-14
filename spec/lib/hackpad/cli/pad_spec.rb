@@ -10,7 +10,7 @@ describe Hackpad::Cli::Pad do
 
   before :each do
     Hackpad::Cli::Api.stub(:read).with('123', 'txt').and_return("content\nand body")
-    Hackpad::Cli::Api.stub(:read_options).with('123').and_return({"success" => "true"})
+    Hackpad::Cli::Api.stub(:read_options).with('123').and_return({"success" => "true", "options" => {}})
     options = {
       configdir: File.expand_path('../../../../files', __FILE__),
       workspace: 'default'
