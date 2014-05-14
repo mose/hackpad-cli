@@ -4,6 +4,7 @@ Hackpad-cli changelog
 v0.0.7 - wip
 -------------
 
+- add a `check` command to check if there are new pads and dcide to refresh or not
 - whole lot of more tests
 
 v0.0.6 - 2014-05-04

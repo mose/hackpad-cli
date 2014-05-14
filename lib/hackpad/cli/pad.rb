@@ -54,6 +54,10 @@ module Hackpad
         @moderated = !!options['isModerated']
       end
 
+      def is_cached?
+        Store.exists? 'txt', @id
+      end
+
     end
   end
 end

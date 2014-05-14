@@ -27,6 +27,18 @@ module Hackpad
         all
       end
 
+      def check_list
+        all = []
+        list = Api.list
+        list.each do |a|
+          pad = Pad.new a
+          if !pad.is_cached?
+            all << OpenStruct.new( id: a, title: pad.title )
+          end
+        end
+        all
+      end
+
     end
   end
 end

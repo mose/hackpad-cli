@@ -37,6 +37,18 @@ module Hackpad
         }
       end
 
+      def check
+        @output.puts "New pads:"
+        padlist = Padlist.check_list.map
+        if padlist.count == 0
+          @output.puts "There is no new pad."
+        else
+          @output.puts padlist.map { |pad|
+            "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
+          }
+        end
+      end
+
       def info(id)
         pad = Pad.new id
         pad.load 'txt'

@@ -47,6 +47,11 @@ module Hackpad
         Hackpad::Cli::Client.new(options).list
       end
 
+      desc "check", "Checks differences between local cache and remote list."
+      def check
+        Hackpad::Cli::Client.new(options).check
+      end
+
       desc "info [pad_id]", "gets info for the pad <pad_id>."
       def info(pad)
         Hackpad::Cli::Client.new(options).info pad

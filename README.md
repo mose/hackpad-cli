@@ -40,6 +40,7 @@ Usage
 
 ```
 Commands:
+  hpcli check                   # Checks differences between local cache and remote list.
   hpcli help [COMMAND]          # Describe available commands or one specific command
   hpcli info [pad_id]           # gets info for the pad <pad_id>.
   hpcli list                    # Lists available pads.

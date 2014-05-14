@@ -81,6 +81,29 @@ describe Hackpad::Cli::Client do
     end
   end
 
+  describe ".check" do
+    before { Hackpad::Cli::Api.stub(:prepare) }
+    before { Hackpad::Cli::Store.stub(:prepare) }
+    before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
+    before { Hackpad::Cli::Padlist.stub(:check_list).and_return( [ OpenStruct.new( id: 'xxxxxx', title: 'xtitle' ) ] ) }
+    context "when default options are used," do
+      let(:client) { Hackpad::Cli::Client.new options }
+      it {
+        expect(STDOUT).to receive(:puts).with("New pads:")
+        expect(STDOUT).to receive(:puts).with(["xxxxxx - xtitle"])
+        client.check
+      }
+    end
+    context "when options sets urls to true," do
+      let(:client) { Hackpad::Cli::Client.new options.merge({urls: true}) }
+      it {
+        expect(STDOUT).to receive(:puts).with("New pads:")
+        expect(STDOUT).to receive(:puts).with(["http://test.dev/xxxxxx - xtitle"])
+        client.check
+      }
+    end
+  end
+
   describe ".info" do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
