@@ -39,7 +39,7 @@ module Hackpad
 
       def check
         @output.puts "New pads:"
-        padlist = Padlist.check_list.map
+        padlist = Padlist.check_list(@options['refresh']).map
         if padlist.count == 0
           @output.puts "There is no new pad."
         else

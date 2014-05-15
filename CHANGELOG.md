@@ -4,6 +4,7 @@ Hackpad-cli changelog
 v0.0.8 - wip
 ------------
 
+- add a User-Agent so that hackpad knows what is poking them
 
 v0.0.7 - 2014-05-15
 -------------

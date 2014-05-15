@@ -32,21 +32,25 @@ module Hackpad
         raise UnknownFormat unless FORMATS.include? ext
         raise UndefinedPad unless @id
         if refresh or !Store.exists? ext, @id
-          load_from_api ext
+          load_from_api ext, refresh
         else
           load_from_cache ext
         end
       end
 
-      def load_from_api(ext)
+      def load_from_api(ext, save=true)
         @content = Api.read @id, ext
-        Store.save self, ext
+        if save
+          Store.save self, ext
+        end
         options = Api.read_options @id
         @guest_policy = options['options']['guestPolicy']
         @moderated = !!options['options']['isModerated']
         options['cached_at'] = Time.now
         @cached_at = options['cached_at']
-        Store.save_meta @id, options
+        if save
+          Store.save_meta @id, options
+        end
       end
 
       def load_from_cache(ext)

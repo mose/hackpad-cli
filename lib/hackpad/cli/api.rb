@@ -29,10 +29,6 @@ module Hackpad
         get "/api/1.0/pads/all"
       end
 
-      def title(id)
-        show(id, 'txt').lines.first
-      end
-
       def read_options(id)
         get "/api/1.0/pad/#{id}/options"
       end
@@ -42,7 +38,7 @@ module Hackpad
       end
 
       def get(url, json=true)
-        res = @token.get url
+        res = @token.get url, {'User-Agent' => "hackpad-cli v${Hackpad::VERSION}"}
         if res.is_a? Net::HTTPSuccess
           puts res.body.inspect if ENV['DEBUG']
           if json
