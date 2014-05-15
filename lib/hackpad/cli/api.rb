@@ -38,7 +38,7 @@ module Hackpad
       end
 
       def get(url, json=true)
-        res = @token.get url, {'User-Agent' => "hackpad-cli v${Hackpad::VERSION}"}
+        res = @token.get url, {'User-Agent' => "hackpad-cli v#{Hackpad::Cli::VERSION}"}
         if res.is_a? Net::HTTPSuccess
           puts res.body.inspect if ENV['DEBUG']
           if json
