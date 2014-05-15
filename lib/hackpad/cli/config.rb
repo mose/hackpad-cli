@@ -27,18 +27,19 @@ module Hackpad
         FileUtils.mkdir_p File.dirname(configfile)
         output.puts "We need first to initialize your hackpad-cli configuration.".blue
         output.puts "Please gather your information from https://<subdomain>.hackpad.com/ep/account/settings/".light_blue
-        output.print "What is your Client ID?  "
-        config['client_id'] = input.gets.chomp
-        output.flush
-        output.print "What is your Secret Key? "
-        output.flush
-        config['secret'] = input.gets.chomp
-        output.print "What is the URI of your pad? "
-        output.flush
-        config['site'] = input.gets.chomp
+        config['client_id'] = ask "What is your Client ID?", input, output
+        config['secret'] = ask "What is your Secret Key?", input, output
+        config['site'] = ask "What is the URI of your pad?", input, output
         File.open(configfile, "w") do |f|
           f.write YAML::dump(config)
         end
+      end
+
+      def ask(question, input, output)
+        output.print "#{question} "
+        back = input.gets.chomp
+        output.flush
+        back
       end
 
     end
