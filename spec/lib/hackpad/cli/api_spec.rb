@@ -23,6 +23,7 @@ describe Hackpad::Cli::Api do
   pending ".list"
   pending ".read_options"
   pending ".read"
+
   describe ".get" do
     let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
@@ -31,7 +32,6 @@ describe Hackpad::Cli::Api do
         stub_request(:get, "http://x.hackpad.com/api/1.0/xxx").
           with( :headers => {
             'Accept'=>'*/*',
-            'Accept-Encoding'=> //,
             'Authorization'=> /OAuth oauth_consumer_key="123"/,
             'User-Agent'=> /hackpad-cli v#{Hackpad::Cli::VERSION}/
           }).
