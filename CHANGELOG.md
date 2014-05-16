@@ -4,7 +4,7 @@ Hackpad-cli changelog
 v0.1.0 - wip
 ------------
 
-- add a `stats` comand to show how much pads are cached
+- add a `stats` comand to show how much pads are cached, and when it was last refreshed
 - move `-r` (refresh) and `-u` (urls) options to specific method options
 - add a User-Agent so that hackpad knows what is poking them
 - completed test coverage
