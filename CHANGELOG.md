@@ -1,10 +1,12 @@
 Hackpad-cli changelog
 ==========================
 
-v0.0.8 - wip
+v0.1.0 - wip
 ------------
 
 - add a User-Agent so that hackpad knows what is poking them
+- completed test coverage
+- prevent trailing slash on site config param to fuck up urls
 
 v0.0.7 - 2014-05-15
 -------------
