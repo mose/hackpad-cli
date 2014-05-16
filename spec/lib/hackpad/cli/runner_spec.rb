@@ -33,6 +33,20 @@ describe Hackpad::Cli::Runner do
     end
   end
 
+  it "calls the check method in client class" do
+    Object.stub(:check)
+    cli.shell.mute do
+      cli.check
+    end
+  end
+
+  it "calls the version method in client class" do
+    STDOUT.stub(:puts).with(Hackpad::Cli::VERSION)
+    cli.shell.mute do
+      cli.version
+    end
+  end
+
   it "calls the info method in client class" do
     Object.stub(:info)
     cli.shell.mute do
@@ -44,6 +58,13 @@ describe Hackpad::Cli::Runner do
     Object.stub(:show)
     cli.shell.mute do
       cli.show 'pad', 'md'
+    end
+  end
+
+  it "calls the colors method in client class" do
+    String.stub(:color_matrix).with(' xoxo ')
+    cli.shell.mute do
+      cli.colors
     end
   end
 
