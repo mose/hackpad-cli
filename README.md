@@ -33,6 +33,8 @@ or
     cd hackpad-cli
     bundle install
 
+Then you will have to launch it once and it will ask you some questions. you cna find your client_id and secret at https://<subdomain>.hackpad.com/ep/account/settings/ (your subdomain is where you store the pads).
+
 Usage
 ---------------
 
