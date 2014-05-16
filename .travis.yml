@@ -1,4 +1,5 @@
 language: ruby
+bundler_args: --deployment
 cache: bundler
 rvm:
   - 1.9.3
