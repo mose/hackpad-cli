@@ -25,6 +25,7 @@ module Hackpad
       def stats
         table "Site", @config['site'].blue
         table "Cached Pads", Store.count_pads
+        table "Last Refresh", Store.last_refresh || "not refreshed yet"
       end
 
       def search(term,start=0)

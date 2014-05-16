@@ -31,13 +31,16 @@ describe Hackpad::Cli::Client do
   end
 
   describe ".stats" do
+    let(:timestamp) { Time.new(2013, 10, 2) }
     before { Hackpad::Cli::Store.stub(:prepare) }
     before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
     before { Hackpad::Cli::Store.stub(:count_pads).and_return(12) }
+    before { Hackpad::Cli::Store.stub(:last_refresh).and_return(timestamp) }
     let(:client) { Hackpad::Cli::Client.new options }
     it {
       expect(STDOUT).to receive(:printf).with(format, "Site", "\e[0;34;49mhttp://test.dev\e[0m")
       expect(STDOUT).to receive(:printf).with(format, "Cached Pads", 12)
+      expect(STDOUT).to receive(:printf).with(format, "Last Refresh", timestamp)
       client.stats
     }
   end

@@ -11,7 +11,7 @@ module Hackpad
         @refresh = config[:refresh]
         dir = File.join(config[:configdir], config[:workspace])
         @pads_dir = File.join(dir, 'pads')
-        @list_cache = File.join(dir, 'pads.list')
+        @list_cache = File.join(@pads_dir, 'padlist')
         prepare_dirs @pads_dir
       end
 
@@ -36,7 +36,7 @@ module Hackpad
       end
 
       def save_list(pads)
-        File.open(File.join(@pads_dir, 'padlist'), 'w') do |f|
+        File.open(@list_cache, 'w') do |f|
           pads.each do |p|
             f.puts "#{p.id} [#{p.cached_at}] #{p.title}"
           end
@@ -54,7 +54,7 @@ module Hackpad
       end
 
       def read_list
-        File.read(File.join(@pads_dir, 'padlist')).lines.reduce([]) { |a,line|
+        File.read(@list_cache).lines.reduce([]) { |a,line|
           /(?<id>[a-zA-Z0-9]*) (\[(?<cached_at>[-a-zA-Z0-9: ]*)\] )?(?<title>.*)/ =~ line
           a << OpenStruct.new( id: id, title: title, cached_at: cached_at )
           a
@@ -63,6 +63,10 @@ module Hackpad
 
       def count_pads
         Dir.glob(File.join(@pads_dir,'meta','*')).count
+      end
+
+      def last_refresh
+        File.mtime(@list_cache) if File.exists?(@list_cache)
       end
 
     end

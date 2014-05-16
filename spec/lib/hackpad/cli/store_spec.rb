@@ -118,4 +118,17 @@ describe Hackpad::Cli::Store do
     it { expect( subject.count_pads ).to be 1 }
   end
 
+  describe ".last_refresh" do
+    let(:timestamp) { Time.new(2012, 10, 31) }
+    let(:padlist) { File.join(configdir, 'default', 'pads', 'padlist') }
+    let(:pads) { [ OpenStruct.new( id: "123", cached_at: "some time", title: "title1" ) ] }
+    before { subject.prepare options }
+    before {
+      subject.save_list pads
+      FileUtils.touch padlist, mtime: timestamp
+    }
+    after { FileUtils.rm padlist }
+    it { expect( subject.last_refresh ).to eq timestamp }
+  end
+
 end
