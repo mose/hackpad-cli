@@ -9,6 +9,7 @@ v0.1.0 - 2014-05-17
 - add a User-Agent so that hackpad knows what is poking them
 - completed test coverage
 - prevent trailing slash on site config param to fuck up urls
+- useless but satisfying rubocop green flag
 
 v0.0.7 - 2014-05-15
 -------------------
