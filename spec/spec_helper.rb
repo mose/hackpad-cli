@@ -2,11 +2,11 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'rubygems'
 require 'bundler'
 
-require 'coveralls'
-Coveralls.wear!
+# require 'coveralls'
+# Coveralls.wear!
 
-# require "codeclimate-test-reporter"
-# CodeClimate::TestReporter.start
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 RSpec.configure do |config|
   config.mock_with :rspec

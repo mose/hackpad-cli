@@ -73,7 +73,7 @@ Check the [Changelog](CHANGELOG.md) for past evolutions.
   - <s>cache the pads list in a local storage</s>
   - <s>have a choice to refresh cache</s>
   - <s>display cached date in output</s>
-  - write proper tests
+  - <s>write proper tests</s>
 - for v0.2.0
   - add commands for creating a new pad, linked to $EDITOR
   - add a gateway to github so a pad could be copied over a wiki page directly or in a repo somehow
