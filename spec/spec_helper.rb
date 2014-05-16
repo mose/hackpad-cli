@@ -5,8 +5,9 @@ require 'bundler'
 require 'coveralls'
 Coveralls.wear!
 
-# require "codeclimate-test-reporter"
-# CodeClimate::TestReporter.start
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
 RSpec.configure do |config|
   config.mock_with :rspec
