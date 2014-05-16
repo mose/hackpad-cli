@@ -22,7 +22,8 @@ describe Hackpad::Cli::Config do
 
     context "when there is no config file," do
       it "calls for setup" do
-        subject.stub(:setup).with(configfile)
+        Dir.stub(:exists?).and_return false
+        subject.stub(:setup).with(configfile, STDIN, STDOUT)
         File.open(configfile, "w") do |f|
           f.write YAML::dump(config)
         end

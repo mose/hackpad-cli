@@ -10,10 +10,6 @@ module Hackpad
         @output = output
         configdir = options[:configdir]
         configfile = File.join(configdir, "#{options[:workspace]}.yml")
-        # temporary migration path
-        if !File.exists?(configfile) && File.exists?(File.join(configdir, "config.yml"))
-          FileUtils.mv File.join(configdir, "config.yml"), configfile
-        end
         if !Dir.exists?(configdir) || !File.exists?(configfile)
           setup configfile, input, output
         end
