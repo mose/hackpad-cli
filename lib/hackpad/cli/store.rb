@@ -29,7 +29,7 @@ module Hackpad
         end
       end
 
-      def save_meta(id, options)
+      def save_options(id, options)
         File.open(File.join(@pads_dir, 'meta', id), 'w') do |f|
           f.puts JSON.pretty_generate(options)
         end

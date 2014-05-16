@@ -49,7 +49,7 @@ module Hackpad
         options['cached_at'] = Time.now
         @cached_at = options['cached_at']
         if save
-          Store.save_meta @id, options
+          Store.save_options @id, options
         end
       end
 

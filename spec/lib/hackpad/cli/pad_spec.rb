@@ -82,7 +82,7 @@ describe Hackpad::Cli::Pad do
         before { Hackpad::Cli::Api.stub(:read_options).with("123").and_return(meta) }
         context "when we want to save to cache," do
           before { Hackpad::Cli::Store.stub(:save) }
-          before { Hackpad::Cli::Store.stub(:save_meta) }
+          before { Hackpad::Cli::Store.stub(:save_options) }
           before { pad.load_from_api 'txt' }
           it { expect(pad.content).to eq "This\nis\nInformation!" }
         end

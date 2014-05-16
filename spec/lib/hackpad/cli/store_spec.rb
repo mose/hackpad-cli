@@ -65,13 +65,13 @@ describe Hackpad::Cli::Store do
     }
   end
 
-  describe ".save_meta" do
+  describe ".save_options" do
     let(:padfile) { File.join(configdir, 'default', 'pads', 'meta', 'xxx') }
     let(:content) { { thing: "123", other: "option" } }
     before { subject.prepare options }
     after { FileUtils.rm padfile }
     it {
-      subject.save_meta "xxx", content
+      subject.save_options "xxx", content
       expect( File.read(padfile) ).to eq "{\n  \"thing\": \"123\",\n  \"other\": \"option\"\n}\n"
     }
   end
@@ -104,7 +104,7 @@ describe Hackpad::Cli::Store do
     let(:padfile) { File.join(configdir, 'default', 'pads', 'meta', 'xxx') }
     let(:content) { { "thing" => "123", "other" => "option" } }
     before { subject.prepare options }
-    before { subject.save_meta "xxx", content }
+    before { subject.save_options "xxx", content }
     after { FileUtils.rm padfile }
     it { expect( subject.read_options "xxx" ).to eq content }
   end
