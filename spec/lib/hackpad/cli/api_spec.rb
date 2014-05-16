@@ -4,6 +4,8 @@ require 'spec_helper'
 require 'webmock/rspec'
 require "hackpad/cli/api"
 
+WebMock.disable_net_connect!(:allow => "codeclimate.com")
+
 describe Hackpad::Cli::Api do
 
   pending ".prepare"
