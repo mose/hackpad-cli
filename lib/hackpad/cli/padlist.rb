@@ -1,23 +1,23 @@
 require 'ostruct'
-require_relative "store"
-require_relative "api"
-require_relative "pad"
+require_relative 'store'
+require_relative 'api'
+require_relative 'pad'
 
 module Hackpad
   module Cli
     module Padlist
-      extend self
+      module_function
 
-      def get_list(refresh=false, output=STDOUT)
+      def get_list(refresh = false, output = STDOUT)
         all = []
-        if refresh or !Store.exists? "padlist"
-          output.print "Refreshing "
+        if refresh || !Store.exists?('padlist')
+          output.print 'Refreshing '
           list = Api.list
           list.each do |a|
-            output.print "."
+            output.print '.'
             all << get_pad(a, refresh)
           end
-          output.puts " all done."
+          output.puts ' all done.'
           Store.save_list all
         else
           all = Store.read_list
@@ -25,10 +25,10 @@ module Hackpad
         all
       end
 
-      def get_pad(id, refresh=false)
+      def get_pad(id, refresh = false)
         pad = Pad.new id
         pad.load 'txt', refresh
-        OpenStruct.new( id: id, title: pad.title )
+        OpenStruct.new(id: id, title: pad.title)
       end
 
       def check_list
@@ -36,9 +36,9 @@ module Hackpad
         list = Api.list
         list.each do |a|
           pad = Pad.new a
-          if !pad.is_cached?
+          unless pad.cached?
             pad.load 'txt', false, false
-            all << OpenStruct.new( id: a, title: pad.title )
+            all << OpenStruct.new(id: a, title: pad.title)
           end
         end
         all
@@ -47,4 +47,3 @@ module Hackpad
     end
   end
 end
-

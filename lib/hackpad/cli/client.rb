@@ -11,7 +11,7 @@ module Hackpad
   module Cli
     class Client
 
-      def initialize(options, output=STDOUT)
+      def initialize(options, output = STDOUT)
         @output = output
         @options = options
         Store.prepare @options
@@ -23,15 +23,15 @@ module Hackpad
       end
 
       def stats
-        table "Site", @config['site'].blue
-        table "Cached Pads", Store.count_pads
-        table "Last Refresh", Store.last_refresh || "not refreshed yet"
+        table 'Site', @config['site'].blue
+        table 'Cached Pads', Store.count_pads
+        table 'Last Refresh', Store.last_refresh || 'not refreshed yet'
       end
 
-      def search(term,start=0)
-        payload = Api.search(term,start)
+      def search(term, start = 0)
+        payload = Api.search(term, start)
         payload.each do |a|
-          @output.puts "#{(@config['site'] + '/') if @options[:urls]}#{a['id'].bold} - #{unescape(a['title']).yellow}"
+          @output.puts "#{id_or_url a['id']} - #{unescape(a['title']).yellow}"
           @output.puts "   #{extract a['snippet']}"
         end
       end
@@ -43,10 +43,10 @@ module Hackpad
       end
 
       def check
-        @output.puts "New pads:"
+        @output.puts 'New pads:'
         padlist = Padlist.check_list(@options['refresh']).map
         if padlist.count == 0
-          @output.puts "There is no new pad."
+          @output.puts 'There is no new pad.'
         else
           @output.puts padlist.map { |pad|
             padline pad
@@ -57,17 +57,17 @@ module Hackpad
       def info(id)
         pad = Pad.new id
         pad.load 'txt'
-        table "Id", "#{id}".bold
-        table "Title", "#{pad.title}".yellow
-        table "URI", "#{@config['site']}/#{id}"
-        table "Chars", "#{pad.chars}"
-        table "Lines", "#{pad.lines}"
-        table "Guest Policy", "#{pad.guest_policy}"
-        table "Moderated", "#{pad.moderated}"
-        table "Cached", "#{pad.cached_at || 'unknown'}"
+        table 'Id', "#{id}".bold
+        table 'Title', "#{pad.title}".yellow
+        table 'URI', "#{@config['site']}/#{id}"
+        table 'Chars', "#{pad.chars}"
+        table 'Lines', "#{pad.lines}"
+        table 'Guest Policy', "#{pad.guest_policy}"
+        table 'Moderated', "#{pad.moderated}"
+        table 'Cached', "#{pad.cached_at || 'unknown'}"
       end
 
-      def show(id,format)
+      def show(id, format)
         ext = (format == 'md') ? 'html' : format
         pad = Pad.new id
         pad.load ext
@@ -78,7 +78,7 @@ module Hackpad
         end
       end
 
-    private
+      private
 
       def padline(pad)
         "#{(@config['site'] + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
@@ -89,11 +89,15 @@ module Hackpad
       end
 
       def extract(s)
-        unescape(s).gsub(/<b class="hit">([^<]*)<\/b>/) { |e| $1.cyan.bold }
+        unescape(s).gsub(/<b class="hit">([^<]*)<\/b>/) { Regexp.last_match[1].cyan.bold }
       end
 
-      def table(key,value)
+      def table(key, value)
         @output.printf "%-20s %s\n", key, value
+      end
+
+      def id_or_url(id)
+        "#{(@config['site'] + '/') if @options[:urls]}#{id.bold}"
       end
 
     end

@@ -1,7 +1,7 @@
 require 'colorize'
 
 class String
-  def colorize(params)
+  def colorize(_)
     self
   end
 end

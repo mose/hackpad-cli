@@ -1,0 +1,14 @@
+LineLength:
+  Max: 122
+MethodLength:
+  Max: 16
+Documentation:
+  Enabled: false
+AlignHash:
+  Enabled: false
+IndentHash:
+  Enabled: false
+AlignParameters:
+  Enabled: false
+EmptyLinesAroundBody:
+  Enabled: false

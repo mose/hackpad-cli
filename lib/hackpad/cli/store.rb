@@ -5,7 +5,7 @@ require_relative '../cli'
 module Hackpad
   module Cli
     module Store
-      extend self
+      module_function
 
       def prepare(config)
         @refresh = config[:refresh]
@@ -20,7 +20,7 @@ module Hackpad
       end
 
       def exists?(*path)
-        !@refresh && File.exists?(File.join(@pads_dir, *path))
+        !@refresh && File.exist?(File.join(@pads_dir, *path))
       end
 
       def save(pad, ext)
@@ -54,19 +54,19 @@ module Hackpad
       end
 
       def read_list
-        File.read(@list_cache).lines.reduce([]) { |a,line|
+        File.read(@list_cache).lines.reduce([]) do |a, line|
           /(?<id>[a-zA-Z0-9]*) (\[(?<cached_at>[-a-zA-Z0-9: ]*)\] )?(?<title>.*)/ =~ line
-          a << OpenStruct.new( id: id, title: title, cached_at: cached_at )
+          a << OpenStruct.new(id: id, title: title, cached_at: cached_at)
           a
-        }
+        end
       end
 
       def count_pads
-        Dir.glob(File.join(@pads_dir,'meta','*')).count
+        Dir.glob(File.join(@pads_dir, 'meta', '*')).count
       end
 
       def last_refresh
-        File.mtime(@list_cache) if File.exists?(@list_cache)
+        File.mtime(@list_cache) if File.exist?(@list_cache)
       end
 
     end

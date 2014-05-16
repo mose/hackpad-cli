@@ -9,10 +9,9 @@ module Hackpad
     end
 
     module Api
-      extend self
+      module_function
 
       def prepare(config)
-        site = URI.parse config['site']
         consumer = OAuth::Consumer.new(
           config['client_id'],
           config['secret'],
@@ -21,12 +20,12 @@ module Hackpad
         @token = OAuth::AccessToken.new consumer
       end
 
-      def search(term, start=0)
+      def search(term, start = 0)
         get "/api/1.0/search?q=#{CGI.escape term}&start=#{start}&limit=100"
       end
 
       def list
-        get "/api/1.0/pads/all"
+        get '/api/1.0/pads/all'
       end
 
       def read_options(id)
@@ -37,17 +36,12 @@ module Hackpad
         get "/api/1.0/pad/#{id}/content.#{ext}", false
       end
 
-      def get(url, json=true)
-        res = @token.get url, {'User-Agent' => "hackpad-cli v#{Hackpad::Cli::VERSION}"}
+      def get(url, json = true)
+        res = @token.get url, 'User-Agent' => "hackpad-cli v#{Hackpad::Cli::VERSION}"
         if res.is_a? Net::HTTPSuccess
-          puts res.body.inspect if ENV['DEBUG']
-          if json
-            JSON.parse res.body
-          else
-            res.body
-          end
+          json ? JSON.parse(res.body) : res.body
         else
-          raise ApiException, "HTTP error, code #{res.code}"
+          fail ApiException, "HTTP error, code #{res.code}"
         end
       end
 
