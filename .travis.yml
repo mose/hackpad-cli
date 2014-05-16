@@ -1,6 +1,8 @@
 language: ruby
-bundler_args: --deployment
-cache: bundler
+bundler_args: --path vendor
+cache:
+  directories:
+  - vendor/ruby
 rvm:
   - 1.9.3
   - 2.1.1
