@@ -42,22 +42,21 @@ Usage
 
 ```
 Commands:
-  hpcli check                   # Checks differences between local cache and remote list.
+  hpcli check                   # Checks differences between local cache and remote list (options: -u to show urls).
   hpcli help [COMMAND]          # Describe available commands or one specific command
   hpcli info [pad_id]           # gets info for the pad <pad_id>.
-  hpcli list                    # Lists available pads.
-  hpcli search [term]           # Lists available pads matching [term].
-  hpcli show [pad_id] [format]  # shows pad <pad_id> in format [html,txt,md] (default txt).
+  hpcli list                    # Lists available pads (options: -u to show urls, -r to refresh).
+  hpcli search [term]           # Lists available pads matching [term] (options: -u to show urls)
+  hpcli show [pad_id] [format]  # shows pad <pad_id> in format [html,txt,md] (default txt) (options: -r to refresh).
+  hpcli stats                   # Lists configuration values.
   hpcli version                 # Displays the hackpad-cli version.
 
 Options:
-  -c, [--configdir=CONFIGDIR]      # Path to the hackpad-cli directory to use.
-                                   # Default: /home/mose/.hackpad-cli/
-  -w, [--workspace=WORKSPACE]      # Name of the workspace to use.
-                                   # Default: default
-  -r, [--refresh], [--no-refresh]  # Add this if you want refresh the cache.
-  -u, [--urls], [--no-urls]        # Displays urls rather than pad ids.
-  -p, [--plain], [--no-plain]      # Add this if you don't want colors.
+  -c, [--configdir=CONFIGDIR]  # Path to the hackpad-cli directory to use.
+                               # Default: /home/mose/.hackpad-cli/
+  -w, [--workspace=WORKSPACE]  # Name of the workspace to use.
+                               # Default: default
+  -p, [--plain], [--no-plain]  # Add this if you don't want colors.
 ```
 
 At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is .. default.yml). If you pass the `-w whatever` option at the end, it will ask questions again to write whatever.yml config file.
@@ -68,7 +67,7 @@ Roadmap and todoz
 
 Check the [Changelog](CHANGELOG.md) for past evolutions.
 
-- for v0.1.0
+- <s>for v0.1.0</s>
   - <s>add freaking cool badges on the readme</s>
   - <s>cache the pads list in a local storage</s>
   - <s>have a choice to refresh cache</s>

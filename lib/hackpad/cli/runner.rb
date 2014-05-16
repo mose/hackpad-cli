@@ -46,20 +46,20 @@ module Hackpad
         Hackpad::Cli::Client.new(options).stats
       end
 
-      desc "search [term]", "Lists available pads matching [term]."
+      desc "search [term]", "Lists available pads matching [term] (options: -u to show urls)"
       method_option *url_option
       def search(term)
         Hackpad::Cli::Client.new(options).search term
       end
 
-      desc "list", "Lists available pads."
+      desc "list", "Lists available pads (options: -u to show urls, -r to refresh)."
       method_option *refresh_option
       method_option *url_option
       def list
         Hackpad::Cli::Client.new(options).list
       end
 
-      desc "check", "Checks differences between local cache and remote list."
+      desc "check", "Checks differences between local cache and remote list (options: -u to show urls)."
       method_option *url_option
       def check
         Hackpad::Cli::Client.new(options).check
@@ -70,7 +70,7 @@ module Hackpad
         Hackpad::Cli::Client.new(options).info pad
       end
 
-      desc "show [pad_id] [format]", "shows pad <pad_id> in format [html,txt,md] (default txt)."
+      desc "show [pad_id] [format]", "shows pad <pad_id> in format [html,txt,md] (default txt) (options: -r to refresh)."
       method_option *refresh_option
       def show(pad,format='txt')
         Hackpad::Cli::Client.new(options).show pad, format
