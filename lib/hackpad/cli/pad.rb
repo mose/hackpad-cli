@@ -28,11 +28,11 @@ module Hackpad
         @content.lines.count if @content
       end
 
-      def load(ext, refresh=false)
+      def load(ext, refresh=false, save=true)
         raise UnknownFormat unless FORMATS.include? ext
         raise UndefinedPad unless @id
         if refresh or !Store.exists? ext, @id
-          load_from_api ext, refresh
+          load_from_api ext, save
         else
           load_from_cache ext
         end

@@ -7,6 +7,22 @@ module Hackpad
   module Cli
     class Runner < Thor
 
+      refresh_option = [ :refresh, {
+          aliases: "-r",
+          type: 'boolean',
+          default: false,
+          desc: "Add this if you want refresh the cache."
+        }
+      ]
+
+      url_option = [ :urls, {
+          aliases: "-u",
+          type: 'boolean',
+          default: false,
+          desc: "Displays urls rather than pad ids."
+        }
+      ]
+
       class_option :configdir,
         aliases: "-c",
         default: File.join(ENV["HOME"], ".hackpad-cli/"),
@@ -17,18 +33,6 @@ module Hackpad
         default: "default",
         desc: "Name of the workspace to use."
 
-      class_option :refresh,
-        aliases: "-r",
-        type: 'boolean',
-        default: false,
-        desc: "Add this if you want refresh the cache."
-
-      class_option :urls,
-        aliases: "-u",
-        type: 'boolean',
-        default: false,
-        desc: "Displays urls rather than pad ids."
-
       class_option :plain,
         aliases: "-p",
         type: 'boolean',
@@ -38,16 +42,20 @@ module Hackpad
       default_task :help
 
       desc "search [term]", "Lists available pads matching [term]."
+      method_option *url_option
       def search(term)
         Hackpad::Cli::Client.new(options).search term
       end
 
       desc "list", "Lists available pads."
+      method_option *refresh_option
+      method_option *url_option
       def list
         Hackpad::Cli::Client.new(options).list
       end
 
       desc "check", "Checks differences between local cache and remote list."
+      method_option *url_option
       def check
         Hackpad::Cli::Client.new(options).check
       end
@@ -58,6 +66,7 @@ module Hackpad
       end
 
       desc "show [pad_id] [format]", "shows pad <pad_id> in format [html,txt,md] (default txt)."
+      method_option *refresh_option
       def show(pad,format='txt')
         Hackpad::Cli::Client.new(options).show pad, format
       end
@@ -66,7 +75,6 @@ module Hackpad
       def version
         puts Hackpad::Cli::VERSION
       end
-
 
       desc "colors", "displays colorize color matrix.", hide: true
       def colors

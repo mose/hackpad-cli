@@ -31,13 +31,13 @@ module Hackpad
         OpenStruct.new( id: id, title: pad.title )
       end
 
-      def check_list(refresh=false)
+      def check_list
         all = []
         list = Api.list
         list.each do |a|
           pad = Pad.new a
           if !pad.is_cached?
-            pad.load 'txt', refresh
+            pad.load 'txt', false, false
             all << OpenStruct.new( id: a, title: pad.title )
           end
         end
