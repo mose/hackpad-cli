@@ -8,8 +8,6 @@ WebMock.disable_net_connect!(:allow => "codeclimate.com")
 
 describe Hackpad::Cli::Api do
 
-  pending ".prepare"
-
   describe ".search" do
     let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
@@ -25,26 +23,30 @@ describe Hackpad::Cli::Api do
   describe ".list" do
     let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
-    context "when just a simple term is provided," do
-      it "returns expected json" do
-        stub_request(:get, "http://x.hackpad.com/api/1.0/pads/all").
-          to_return(body: '["aaa","bbb"]', status: 200)
-        expect(subject.list).to eq(["aaa","bbb"])
-      end
+    it "returns expected json" do
+      stub_request(:get, "http://x.hackpad.com/api/1.0/pads/all").
+        to_return(body: '["aaa","bbb"]', status: 200)
+      expect(subject.list).to eq(["aaa","bbb"])
     end
   end
 
-  pending ".read_options"
+  describe ".read_options" do
+    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
+    before { Hackpad::Cli::Api.prepare config }
+    it "returns expected json" do
+      stub_request(:get, "http://x.hackpad.com/api/1.0/pad/aaa/options").
+        to_return(body: '{ "options": "xxx"}', status: 200)
+      expect(subject.read_options("aaa")).to eq({ "options" => "xxx"})
+    end
+  end
 
   describe ".read" do
     let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
-    context "when just a simple term is provided," do
-      it "returns expected json" do
-        stub_request(:get, "http://x.hackpad.com/api/1.0/pad/aaa/content.html").
-          to_return(body: '<b>blah</b>', status: 200)
-        expect(subject.read("aaa","html")).to eq("<b>blah</b>")
-      end
+    it "returns expected json" do
+      stub_request(:get, "http://x.hackpad.com/api/1.0/pad/aaa/content.html").
+        to_return(body: '<b>blah</b>', status: 200)
+      expect(subject.read("aaa","html")).to eq("<b>blah</b>")
     end
   end
 
