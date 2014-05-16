@@ -4,7 +4,7 @@ Hackpad-cli changelog
 v0.1.0 - 2014-05-17
 -------------------
 
-- add a `stats` comand to show how much pads are cached, and when it was last refreshed
+- add a `stats` command to show how much pads are cached, and when it was last refreshed
 - move `-r` (refresh) and `-u` (urls) options to specific method options
 - add a User-Agent so that hackpad knows what is poking them
 - completed test coverage
@@ -16,7 +16,7 @@ v0.0.7 - 2014-05-15
 
 - add a `cached_at` value in metadata, visible in the `show` command
 - fix `info` to display guest policy properly
-- add a `check` command to check if there are new pads and dcide to refresh or not
+- add a `check` command to check if there are new pads and decide to refresh or not
 - whole lot of more tests
 
 v0.0.6 - 2014-05-04
