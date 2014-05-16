@@ -16,7 +16,7 @@ describe Hackpad::Cli::Pad do
 
   describe ".is_cached?" do
     before { Hackpad::Cli::Store.stub(:exists?).and_return true }
-    it { expect{ pad.is_cached}.to be_true }
+    it { expect(pad.is_cached?).to be_true }
   end
 
   context "when the pad has no data," do
