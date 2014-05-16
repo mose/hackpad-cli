@@ -65,4 +65,48 @@ describe Hackpad::Cli::Store do
     }
   end
 
+  describe ".save_meta" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'meta', 'xxx') }
+    let(:content) { { thing: "123", other: "option" } }
+    before { subject.prepare options }
+    after { FileUtils.rm padfile }
+    it {
+      subject.save_meta "xxx", content
+      expect( File.read(padfile) ).to eq "{\n  \"thing\": \"123\",\n  \"other\": \"option\"\n}\n"
+    }
+  end
+
+  describe ".save_list" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'padlist') }
+    let(:pads) { [ OpenStruct.new( id: "123", cached_at: "some time", title: "title1" ) ] }
+    before { subject.prepare options }
+    after { FileUtils.rm padfile }
+    it {
+      subject.save_list pads
+      expect( File.read(padfile) ).to eq "123 [some time] title1\n"
+    }
+  end
+
+  describe ".read" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
+    let(:content) { "This is content\n" }
+    before { subject.prepare options }
+    let(:pad) { double Hackpad::Cli::Pad }
+    before { pad.stub(:id).and_return "xxx" }
+    before { pad.stub(:content).and_return content }
+    before { subject.save pad, "txt" }
+    after { FileUtils.rm padfile }
+
+    it { expect( subject.read "xxx", "txt" ).to eq content}
+  end
+
+  describe ".read_option" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'meta', 'xxx') }
+    let(:content) { { "thing" => "123", "other" => "option" } }
+    before { subject.prepare options }
+    before { subject.save_meta "xxx", content }
+    after { FileUtils.rm padfile }
+    it { expect( subject.read_options "xxx" ).to eq content }
+  end
+
 end

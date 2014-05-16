@@ -38,7 +38,7 @@ module Hackpad
       def save_list(pads)
         File.open(File.join(@pads_dir, 'padlist'), 'w') do |f|
           pads.each do |p|
-            f.puts "#{p.id} #{p.title}"
+            f.puts "#{p.id} [#{p.cached_at}] #{p.title}"
           end
         end
       end
