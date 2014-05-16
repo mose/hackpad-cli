@@ -2,11 +2,11 @@ $LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'rubygems'
 require 'bundler'
 
-#require "codeclimate-test-reporter"
-#CodeClimate::TestReporter.start
-
 require 'coveralls'
 Coveralls.wear!
+
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 RSpec.configure do |config|
   config.mock_with :rspec
@@ -14,3 +14,13 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+# Warning:
+# I'm not an expert tester, and on this project I wanted to try
+# a super-isolation way. So each spec is testing each method and
+# uses a lock of stubbing and doubles. Up to now I find it quite
+# convenient because it makes the interdependencies more obvious,
+# and when something changes in the code the need for changes in
+# the stubbing is an occasion to think about the whole architecture.
+# Also, it doesn't lie about the coverage, by stubbing all things,
+# a thing is not covered if not explicitely tested.

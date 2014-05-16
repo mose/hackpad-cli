@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require "hackpad/cli/store"
+require "hackpad/cli/pad"
 
 describe Hackpad::Cli::Store do
 
@@ -48,6 +49,20 @@ describe Hackpad::Cli::Store do
       end
     end
 
+  end
+
+  describe ".save" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
+    let(:content) { "This is content\n" }
+    before { subject.prepare options }
+    let(:pad) { double Hackpad::Cli::Pad }
+    before { pad.stub(:id).and_return "xxx" }
+    before { pad.stub(:content).and_return content }
+    after { FileUtils.rm padfile }
+    it {
+      subject.save pad, "txt"
+      expect( File.read(padfile) ).to eq content
+    }
   end
 
 end
