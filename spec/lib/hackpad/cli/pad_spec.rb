@@ -8,34 +8,64 @@ require "hackpad/cli/store"
 
 describe Hackpad::Cli::Pad do
 
-  before :each do
-    Hackpad::Cli::Api.stub(:read).with('123', 'txt').and_return("content\nand body")
-    Hackpad::Cli::Api.stub(:read_options).with('123').and_return({"success" => "true", "options" => {}})
-    options = {
-      configdir: File.expand_path('../../../../files', __FILE__),
-      workspace: 'default'
-    }
-    Hackpad::Cli::Store.prepare options
-    @pad = Hackpad::Cli::Pad.new "123"
-    @pad.load 'txt'
+  let(:pad) { Hackpad::Cli::Pad.new "123" }
+
+  describe ".new" do
+    it { expect(pad.id).to eq "123" }
   end
 
-  after :each do
-    FileUtils.rm_rf File.expand_path('../../../../files/default', __FILE__)
+  context "when the pad has no data," do
+    describe ".title" do
+      it { expect(pad.title).to eq nil }
+    end
+    describe ".chars" do
+      it { expect(pad.chars).to eq nil }
+    end
+    describe ".lines" do
+      it { expect(pad.lines).to eq nil }
+    end
   end
 
-  it "creates a new pad object" do
-    expect(@pad.id).to eq "123"
+  context "when the pad has only a content," do
+    before { pad.instance_variable_set(:@content, "This\nis\nInformation!") }
+    describe ".title" do
+      it { expect(pad.title).to eq "This" }
+    end
+    describe ".chars" do
+      it { expect(pad.chars).to eq 20 }
+    end
+    describe ".lines" do
+      it { expect(pad.lines).to eq 3 }
+    end
   end
 
-  it "Can extract the title" do
-    expect(@pad.title).to eq "content"
-  end
-  it "Can count chars from content" do
-    expect(@pad.chars).to be 16
-  end
-  it "Can count lines from content" do
-    expect(@pad.lines).to be 2
+  context "when a pad is cached," do
+    before { Hackpad::Cli::Store.stub(:exists?).and_return true }
+    context "when we don't want a refresh," do
+      describe ".load" do
+        context "when unknown format is asked," do
+          it { expect { pad.load 'xxx'}.to raise_error(Hackpad::Cli::UnknownFormat) }
+        end
+        context "when pad has no id," do
+          before { pad.remove_instance_variable(:@id) }
+          it { expect { pad.load 'txt'}.to raise_error(Hackpad::Cli::UndefinedPad) }
+        end
+        context "when all is ok," do
+          before { pad.stub(:load_from_cache) }
+          it { expect{ pad.load 'txt' }.not_to raise_error }
+        end
+      end
+      describe ".load_from_cache" do
+        let(:meta) { { 'options' => { 'guestPolicy' => 'open', 'isModerated' => false }, 'cached_at' => 'some time' } }
+        before { Hackpad::Cli::Store.stub(:read).with("123", 'txt').and_return("This\nis\nInformation!") }
+        before { Hackpad::Cli::Store.stub(:read_options).with("123").and_return(meta) }
+        before { pad.load_from_cache 'txt' }
+        it { expect(pad.content).to eq "This\nis\nInformation!" }
+        it { expect(pad.guest_policy).to eq "open" }
+        it { expect(pad.moderated).to be_false }
+        it { expect(pad.cached_at).to eq "some time" }
+      end
+    end
   end
 
 end
