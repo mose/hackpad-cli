@@ -47,7 +47,7 @@ describe Hackpad::Cli::Pad do
           it { expect { pad.load 'xxx'}.to raise_error(Hackpad::Cli::UnknownFormat) }
         end
         context "when pad has no id," do
-          before { pad.remove_instance_variable(:@id) }
+          before { pad.send(:remove_instance_variable, :@id) }
           it { expect { pad.load 'txt'}.to raise_error(Hackpad::Cli::UndefinedPad) }
         end
         context "when all is ok," do
