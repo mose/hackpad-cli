@@ -22,7 +22,11 @@ module Hackpad
         end
       end
 
-      # GET /api/1.0/pads/all
+      def stats
+        table "Site", @config['site'].blue
+        table "Cached Pads", Store.count_pads
+      end
+
       def search(term,start=0)
         payload = Api.search(term,start)
         payload.each do |a|

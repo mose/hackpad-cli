@@ -61,6 +61,10 @@ module Hackpad
         }
       end
 
+      def count_pads
+        Dir.glob(File.join(@pads_dir,'meta','*')).count
+      end
+
     end
   end
 end

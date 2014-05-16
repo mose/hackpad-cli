@@ -6,6 +6,7 @@ require "hackpad/cli/client"
 describe Hackpad::Cli::Client do
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
   let(:options) { { configdir: configdir, workspace: 'default' } }
+  let(:format) { "%-20s %s\n" }
 
   describe ".new" do
     before { Hackpad::Cli::Api.stub(:prepare) }
@@ -27,6 +28,18 @@ describe Hackpad::Cli::Client do
         it { expect("x".blue).to eq "x" }
       end
     end
+  end
+
+  describe ".stats" do
+    before { Hackpad::Cli::Store.stub(:prepare) }
+    before { Hackpad::Cli::Config.stub(:load).and_return({'site' => 'http://test.dev'}) }
+    before { Hackpad::Cli::Store.stub(:count_pads).and_return(12) }
+    let(:client) { Hackpad::Cli::Client.new options }
+    it {
+      expect(STDOUT).to receive(:printf).with(format, "Site", "\e[0;34;49mhttp://test.dev\e[0m")
+      expect(STDOUT).to receive(:printf).with(format, "Cached Pads", 12)
+      client.stats
+    }
   end
 
   describe ".search" do
@@ -137,7 +150,6 @@ describe Hackpad::Cli::Client do
       before { pad.stub(:guest_policy).and_return("open") }
       before { pad.stub(:moderated).and_return("false") }
       before { pad.stub(:cached_at).and_return() }
-      let(:format) { "%-20s %s\n" }
       it {
         expect(STDOUT).to receive(:printf).with(format, "Id", "\e[1;39;49m123\e[0m")
         expect(STDOUT).to receive(:printf).with(format, "Title", "\e[0;33;49mtitle1\e[0m")

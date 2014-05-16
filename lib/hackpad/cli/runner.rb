@@ -41,6 +41,11 @@ module Hackpad
 
       default_task :help
 
+      desc "stats", "Lists configuration values."
+      def stats
+        Hackpad::Cli::Client.new(options).stats
+      end
+
       desc "search [term]", "Lists available pads matching [term]."
       method_option *url_option
       def search(term)

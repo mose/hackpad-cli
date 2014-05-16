@@ -12,6 +12,13 @@ describe Hackpad::Cli::Runner do
     Hackpad::Cli::Client.stub(:new, {}).and_return(Object)
   end
 
+  it "calls the stats method in client class" do
+    Object.stub(:stats)
+    cli.shell.mute do
+      cli.stats
+    end
+  end
+
   it "calls the search method in client class" do
     Object.stub(:search)
     cli.shell.mute do

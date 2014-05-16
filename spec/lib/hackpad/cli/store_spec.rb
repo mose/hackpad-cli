@@ -109,4 +109,13 @@ describe Hackpad::Cli::Store do
     it { expect( subject.read_options "xxx" ).to eq content }
   end
 
+  describe ".count_pads" do
+    let(:padfile) { File.join(configdir, 'default', 'pads', 'meta', 'xxx') }
+    let(:content) { { "thing" => "123", "other" => "option" } }
+    before { subject.prepare options }
+    before { subject.save_options "xxx", content }
+    after { FileUtils.rm padfile }
+    it { expect( subject.count_pads ).to be 1 }
+  end
+
 end
