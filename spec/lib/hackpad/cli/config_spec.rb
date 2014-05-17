@@ -22,7 +22,7 @@ describe Hackpad::Cli::Config do
 
     context 'when there is no config file,' do
       it 'calls for setup' do
-        Dir.stub(:exists?).and_return false
+        Dir.stub(:exist?).and_return false
         subject.stub(:setup).with(configfile, STDIN, STDOUT)
         File.open(configfile, 'w') do |f|
           f.write YAML.dump(config)
@@ -30,7 +30,6 @@ describe Hackpad::Cli::Config do
         expect(subject.load options).to eq config
       end
     end
-
   end
 
   describe '.setup' do
