@@ -30,6 +30,23 @@ describe Hackpad::Cli::Client do
     end
   end
 
+  describe '.sites' do
+    before { Hackpad::Cli::Store.stub(:prepare) }
+    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
+    before do
+      Hackpad::Cli::Store.stub(:list_sites).and_return([
+        OpenStruct.new(name: 'default', url: 'http://dev1.hackpad.com'),
+        OpenStruct.new(name: 'another', url: 'http://dev2.hackpad.com')
+      ])
+    end
+    let(:client) { Hackpad::Cli::Client.new options }
+    it do
+      expect(STDOUT).to receive(:printf).with(format, 'default', "http://dev1.hackpad.com")
+      expect(STDOUT).to receive(:printf).with(format, 'another', "http://dev2.hackpad.com")
+      client.sites
+    end
+  end
+
   describe '.stats' do
     let(:timestamp) { Time.new(2013, 10, 2) }
     before { Hackpad::Cli::Store.stub(:prepare) }

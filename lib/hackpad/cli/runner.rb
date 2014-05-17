@@ -43,6 +43,11 @@ module Hackpad
 
       default_task :help
 
+      desc 'sites', 'Lists configurated hackpad workspaces.'
+      def sites
+        Hackpad::Cli::Client.new(options).sites
+      end
+
       desc 'stats', 'Lists configuration values.'
       def stats
         Hackpad::Cli::Client.new(options).stats

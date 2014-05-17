@@ -10,7 +10,7 @@ module Hackpad
 
       def get_list(refresh = false, output = STDOUT)
         all = []
-        if refresh || !Store.exists?('padlist')
+        if refresh || !Store.exist?('padlist')
           output.print 'Refreshing '
           list = Api.list
           list.each do |a|
@@ -37,7 +37,7 @@ module Hackpad
         list.each do |a|
           pad = Pad.new a
           unless pad.cached?
-            pad.load 'txt', false, false
+            pad.load 'txt'
             all << OpenStruct.new(id: a, title: pad.title)
           end
         end

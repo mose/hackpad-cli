@@ -1,6 +1,8 @@
 require 'json'
 require 'ostruct'
+
 require_relative '../cli'
+require_relative 'config'
 
 module Hackpad
   module Cli
@@ -9,7 +11,8 @@ module Hackpad
 
       def prepare(config)
         @refresh = config[:refresh]
-        dir = File.join(config[:configdir], config[:workspace])
+        @configdir = config[:configdir]
+        dir = File.join(@configdir, config[:workspace])
         @pads_dir = File.join(dir, 'pads')
         @list_cache = File.join(@pads_dir, 'padlist')
         prepare_dirs @pads_dir
@@ -19,8 +22,16 @@ module Hackpad
         (Hackpad::Cli::FORMATS + ['meta']).each { |f| FileUtils.mkdir_p File.join(base, f) }
       end
 
-      def exists?(*path)
+      def exist?(*path)
         !@refresh && File.exist?(File.join(@pads_dir, *path))
+      end
+
+      def list_sites
+        Dir.glob(File.join(@configdir, '*', 'config.yml')).reduce([]) do |a, path|
+          site = File.basename(File.dirname(path))
+          a << OpenStruct.new(name: site, url: Config.load(configdir: @configdir, workspace: site)['site'])
+          a
+        end
       end
 
       def save(pad, ext)

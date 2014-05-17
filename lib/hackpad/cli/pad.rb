@@ -1,3 +1,5 @@
+require 'reverse_markdown'
+
 require_relative 'store'
 require_relative 'api'
 
@@ -28,38 +30,35 @@ module Hackpad
         @content.lines.count if @content
       end
 
-      def load(ext, refresh = false, save = true)
+      def load(ext, refresh = false)
         fail UnknownFormat unless FORMATS.include? ext
         fail UndefinedPad unless @id
-        if refresh || !Store.exists?(ext, @id)
-          load_from_api ext, save
+        if refresh || !Store.exist?(ext, @id)
+          load_from_provider Api, ext
+          Store.save(self, ext)
+          Store.save_options(@id, @options)
         else
-          load_from_cache ext
+          load_from_provider Store, ext
         end
       end
 
-      def load_from_api(ext, dosave = true)
-        @content = Api.read @id, ext
-        dosave && Store.save(self, ext)
-        options = Api.read_options @id
-        @guest_policy = options['options']['guestPolicy']
-        @moderated = options['options']['isModerated']
-        options['cached_at'] = Time.now
-        @cached_at = options['cached_at']
-        dosave && Store.save_options(@id, options)
+      def load_from_provider(klass, ext)
+        @content = klass.read @id, ext
+        @options = klass.read_options(@id)
+        load_options @options
       end
 
-      def load_from_cache(ext)
-        @content = Store.read @id, ext
-        options = Store.read_options @id
+      def load_options(options)
         @guest_policy = options['options']['guestPolicy']
         @moderated = options['options']['isModerated']
+        options['cached_at'] ||= Time.now
         @cached_at = options['cached_at']
       end
 
       def cached?
-        Store.exists? 'meta', @id
+        Store.exist? 'meta', @id
       end
+
 
     end
   end

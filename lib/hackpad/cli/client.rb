@@ -22,6 +22,12 @@ module Hackpad
         end
       end
 
+      def sites
+        Store.list_sites.each do |site|
+          table site.name, site.url
+        end
+      end
+
       def stats
         table 'Site', @config['site'].blue
         table 'Cached Pads', Store.count_pads
@@ -44,7 +50,7 @@ module Hackpad
 
       def check
         @output.puts 'New pads:'
-        padlist = Padlist.check_list(@options['refresh']).map
+        padlist = Padlist.check_list
         if padlist.count == 0
           @output.puts 'There is no new pad.'
         else

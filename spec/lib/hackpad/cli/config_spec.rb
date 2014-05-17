@@ -6,7 +6,7 @@ require 'hackpad/cli/config'
 describe Hackpad::Cli::Config do
 
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
-  let(:configfile) { File.join(configdir, 'default.yml') }
+  let(:configfile) { File.join(configdir, 'default', 'config.yml') }
   let(:options) { { configdir: configdir, workspace: 'default' } }
 
   before :each do
@@ -23,6 +23,7 @@ describe Hackpad::Cli::Config do
     context 'when there is no config file,' do
       it 'calls for setup' do
         Dir.stub(:exist?).and_return false
+        File.stub(:exist?).and_return false
         subject.stub(:setup).with(configfile, STDIN, STDOUT)
         File.open(configfile, 'w') do |f|
           f.write YAML.dump(config)
@@ -30,7 +31,19 @@ describe Hackpad::Cli::Config do
         expect(subject.load options).to eq config
       end
     end
-  end
+
+    context 'when there is a config file but in old location,' do
+      it 'calls for setup' do
+        Dir.stub(:exist?).and_return false
+        File.stub(:exist?).and_return true
+        FileUtils.stub(:mv).and_return true
+        subject.stub(:setup).with(configfile, STDIN, STDOUT)
+        File.open(configfile, 'w') do |f|
+          f.write YAML.dump(config)
+        end
+        expect(subject.load options).to eq config
+      end
+    end  end
 
   describe '.setup' do
     context 'when normal input is provided,' do

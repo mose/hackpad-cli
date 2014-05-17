@@ -13,6 +13,27 @@ describe Hackpad::Cli::Store do
     subject.prepare options
   end
 
+  describe '.list_sites' do
+    before do
+      Dir.exist?(File.join(configdir, 'default')) || FileUtils.mkdir(File.join(configdir, 'default'))
+      File.open(File.join(configdir, 'default', 'config.yml'), 'w') do |f|
+        f.puts "site: http://dev1.hackpad.com"
+      end
+      Dir.exist?(File.join(configdir, 'another')) || FileUtils.mkdir(File.join(configdir, 'another'))
+      File.open(File.join(configdir, 'another', 'config.yml'), 'w') do |f|
+        f.puts "site: http://dev2.hackpad.com"
+      end
+    end
+    after do
+      FileUtils.rm File.join(configdir, 'default', 'config.yml')
+      FileUtils.rm File.join(configdir, 'another', 'config.yml')
+    end
+    it { expect(subject.list_sites).to be_an Array }
+    it { expect(subject.list_sites[0]).to be_an OpenStruct }
+    it { expect(subject.list_sites[0].name).to eq 'default' }
+    it { expect(subject.list_sites[0].url).to eq 'http://dev1.hackpad.com' }
+  end
+
   describe '.read_list' do
     before { File.stub(:read).and_return("gy23ui first one\ngy3u4 second one\n23489g [some time] third") }
     let(:list) { subject.read_list }
@@ -25,7 +46,7 @@ describe Hackpad::Cli::Store do
     it { expect(list[2].cached_at).to eq 'some time' }
   end
 
-  describe '.exists?' do
+  describe '.exist?' do
 
     context 'when refresh option is set,' do
       let(:options) { { configdir: configdir, workspace: 'default', refresh: true } }
@@ -34,18 +55,18 @@ describe Hackpad::Cli::Store do
         FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx')
       end
       after { FileUtils.rm File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
-      it { expect(subject.exists? 'txt', 'xxx').to be false }
+      it { expect(subject.exist? 'txt', 'xxx').to be false }
     end
 
     context 'when refresh option is not set,' do
       context "when config file don't exist," do
-        it { expect(subject.exists? 'txt', 'xxx').to be false }
+        it { expect(subject.exist? 'txt', 'xxx').to be false }
       end
 
       context 'when configfile exists,' do
         before { FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
         after { FileUtils.rm File.join(configdir, 'default', 'pads', 'txt', 'xxx') }
-        it { expect(subject.exists? 'txt', 'xxx').to be true }
+        it { expect(subject.exist? 'txt', 'xxx').to be true }
       end
     end
 

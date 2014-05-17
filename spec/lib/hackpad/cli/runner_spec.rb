@@ -26,10 +26,10 @@ describe Hackpad::Cli::Runner do
     end
   end
 
-  it 'calls the list method in client class' do
-    Object.stub(:list)
+  it 'calls the sites method in client class' do
+    Object.stub(:sites)
     cli.shell.mute do
-      cli.list
+      cli.sites
     end
   end
 

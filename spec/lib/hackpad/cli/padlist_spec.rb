@@ -9,7 +9,7 @@ describe Hackpad::Cli::Padlist do
     let(:output) { StringIO.new }
 
     context 'when no refresh is asked and cache exists,' do
-      before { Hackpad::Cli::Store.stub(:exists?).and_return(true) }
+      before { Hackpad::Cli::Store.stub(:exist?).and_return(true) }
       before { Hackpad::Cli::Store.stub(:read_list).and_return(Array.new) }
       it { expect(subject.get_list).to be_an(Array) }
     end
@@ -18,7 +18,7 @@ describe Hackpad::Cli::Padlist do
       let(:pad1) { OpenStruct.new(id: '123', title: 'title1') }
       let(:pad2) { OpenStruct.new(id: '456', title: 'title2') }
       before { Hackpad::Cli::Api.stub(:list).and_return(%w(123 456)) }
-      before { Hackpad::Cli::Store.stub(:exists?).and_return(false, false) }
+      before { Hackpad::Cli::Store.stub(:exist?).and_return(false, false) }
       before { Hackpad::Cli::Padlist.stub(:get_pad).and_return(pad1, pad2) }
       before { Hackpad::Cli::Store.stub(:save_list) }
       it { expect(subject.get_list(false, output)).to be_an(Array) }

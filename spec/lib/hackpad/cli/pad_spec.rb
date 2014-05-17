@@ -15,7 +15,7 @@ describe Hackpad::Cli::Pad do
   end
 
   describe '.cached?' do
-    before { Hackpad::Cli::Store.stub(:exists?).and_return true }
+    before { Hackpad::Cli::Store.stub(:exist?).and_return true }
     it { expect(pad.cached?).to be_true }
   end
 
@@ -45,7 +45,7 @@ describe Hackpad::Cli::Pad do
   end
 
   context 'when a pad is cached,' do
-    before { Hackpad::Cli::Store.stub(:exists?).and_return true }
+    before { Hackpad::Cli::Store.stub(:exist?).and_return true }
     context "when we don't want a refresh," do
       describe '.load' do
         context 'when unknown format is asked,' do
@@ -56,7 +56,7 @@ describe Hackpad::Cli::Pad do
           it { expect { pad.load 'txt' }.to raise_error(Hackpad::Cli::UndefinedPad) }
         end
         context 'when all is ok,' do
-          before { pad.stub(:load_from_cache) }
+          before { pad.stub(:load_from_provider).with(Hackpad::Cli::Store, 'txt') }
           it { expect { pad.load 'txt' }.not_to raise_error }
         end
       end
@@ -64,7 +64,7 @@ describe Hackpad::Cli::Pad do
         let(:meta) { { 'options' => { 'guestPolicy' => 'open', 'isModerated' => false }, 'cached_at' => 'some time' } }
         before { Hackpad::Cli::Store.stub(:read).with('123', 'txt').and_return("This\nis\nInformation!") }
         before { Hackpad::Cli::Store.stub(:read_options).with('123').and_return(meta) }
-        before { pad.load_from_cache 'txt' }
+        before { pad.load_from_provider Hackpad::Cli::Store, 'txt' }
         it { expect(pad.content).to eq "This\nis\nInformation!" }
         it { expect(pad.guest_policy).to eq 'open' }
         it { expect(pad.moderated).to be_false }
@@ -73,7 +73,9 @@ describe Hackpad::Cli::Pad do
     end
     context 'when we want a refresh,' do
       describe '.load' do
-        before { pad.stub(:load_from_api) }
+        before { pad.stub(:load_from_provider).with(Hackpad::Cli::Api, 'txt') }
+        before { Hackpad::Cli::Store.stub(:save) }
+        before { Hackpad::Cli::Store.stub(:save_options) }
         it { expect { pad.load 'txt', true }.not_to raise_error }
       end
       describe '.load_from_api' do
@@ -83,11 +85,7 @@ describe Hackpad::Cli::Pad do
         context 'when we want to save to cache,' do
           before { Hackpad::Cli::Store.stub(:save) }
           before { Hackpad::Cli::Store.stub(:save_options) }
-          before { pad.load_from_api 'txt' }
-          it { expect(pad.content).to eq "This\nis\nInformation!" }
-        end
-        context "when we don't want to save to cache," do
-          before { pad.load_from_api 'txt', false }
+          before { pad.load_from_provider Hackpad::Cli::Api, 'txt' }
           it { expect(pad.content).to eq "This\nis\nInformation!" }
         end
       end

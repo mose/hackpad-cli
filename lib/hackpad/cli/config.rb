@@ -6,12 +6,15 @@ module Hackpad
       module_function
 
       def load(options, input = STDIN, output = STDOUT)
-        @input = input
-        @output = output
         configdir = options[:configdir]
-        configfile = File.join(configdir, "#{options[:workspace]}.yml")
+        configfile = File.join(configdir, "#{options[:workspace]}/config.yml")
         if !Dir.exist?(configdir) || !File.exist?(configfile)
-          setup configfile, input, output
+          if File.exist? File.join(configdir, "#{options[:workspace]}.yml")
+            FileUtils.mv File.join(configdir, "#{options[:workspace]}.yml"),
+              File.join(configdir, "#{options[:workspace]}/config.yml")
+          else
+            setup configfile, input, output
+          end
         end
         YAML.load_file configfile
       end
