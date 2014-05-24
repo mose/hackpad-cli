@@ -20,7 +20,7 @@ module Hackpad
         @config = Config.new @options, input, output
         Store.prepare @config
         Api.prepare @config
-        if @options[:plain]
+        if @options[:plain] == true || @config.use_colors == false
           Paint.mode = 0
         end
       end

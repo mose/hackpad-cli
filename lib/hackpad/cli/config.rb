@@ -12,14 +12,14 @@ module Hackpad
         @@input = input
         @@output = output
         self.configdir ||= File.join(ENV['HOME'], '.hackpad-cli')
-        self.workspace ||= 'default'
         self.refresh ||= false
         self.urls ||= false
         self.output = output
-        self.workspacedir = File.join(configdir, workspace)
         setio input, output
         patch_1
         addvalues 'config'
+        self.workspace ||= 'default'
+        self.workspacedir = File.join(configdir, workspace)
         addvalues 'workspace'
       end
 
