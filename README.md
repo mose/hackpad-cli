@@ -47,9 +47,10 @@ Commands:
   hpcli info [pad_id]           # gets info for the pad <pad_id>.
   hpcli list                    # Lists available pads (options: -u to show urls, -r to refresh).
   hpcli search [term]           # Lists available pads matching [term] (options: -u to show urls)
-  hpcli show [pad_id] [format]  # shows pad <pad_id> in format [html,txt,md] (default txt) (options: -r to refresh).
+  hpcli show [pad_id] [format]  # shows pad <pad_id> in format [html,txt,md], default txt (options: -r to refresh).
   hpcli stats                   # Lists configuration values.
   hpcli version                 # Displays the hackpad-cli version.
+  hpcli workspaces              # Lists configurated hackpad workspaces.
 
 Options:
   -c, [--configdir=CONFIGDIR]  # Path to the hackpad-cli directory to use.
@@ -59,7 +60,7 @@ Options:
   -p, [--plain], [--no-plain]  # Add this if you don't want colors.
 ```
 
-At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is .. default.yml). If you pass the `-w whatever` option at the end, it will ask questions again to write whatever.yml config file.
+At first launch it will create your config dir (default ~/.hackpad-cli/), and will ask you questions to create the config file (default is `default/config.yml`). If you pass the `-w whatever` option at the end, it will ask questions again to write `whatever/config.yml` config file.
 
 
 Roadmap and todoz

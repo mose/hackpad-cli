@@ -4,8 +4,10 @@ Hackpad-cli changelog
 v0.1.1 - wip
 -------------------
 
-- add a command `sites` to list workspaces
-- move config file from ~/.hackpad-cli/default.yml to ~/.hackpad-cli/default/config.ymlz
+- switch from colorize to paint gems (monkey patch of colorize was itchy)
+- switch the prompt code to another gem called cliprompt
+- add a command `workspaces` to list workspaces
+- move config file from ~/.hackpad-cli/default.yml to ~/.hackpad-cli/default/config.yml
 
 v0.1.0 - 2014-05-17
 -------------------
