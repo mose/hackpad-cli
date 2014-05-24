@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'thor'
-  spec.add_dependency 'cliprompt'
+  spec.add_dependency 'cliprompt', '~> 0.0.4'
   spec.add_dependency 'paint'
   spec.add_dependency 'oauth'
   spec.add_dependency 'reverse_markdown'
