@@ -13,9 +13,9 @@ module Hackpad
 
       def prepare(config)
         consumer = OAuth::Consumer.new(
-          config['client_id'],
-          config['secret'],
-          site: config['site']
+          config.client_id,
+          config.secret,
+          site: config.site
         )
         @token = OAuth::AccessToken.new consumer
       end

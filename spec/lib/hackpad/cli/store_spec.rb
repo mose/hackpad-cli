@@ -7,31 +7,15 @@ require 'hackpad/cli/pad'
 describe Hackpad::Cli::Store do
 
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
-  let(:options) { { configdir: configdir, workspace: 'default' } }
+  let(:options) { OpenStruct.new(
+      configdir: configdir,
+      workspace: 'default',
+      workspacedir: File.join(configdir, 'default')
+      )
+    }
 
   before :each do
     subject.prepare options
-  end
-
-  describe '.list_sites' do
-    before do
-      Dir.exist?(File.join(configdir, 'default')) || FileUtils.mkdir(File.join(configdir, 'default'))
-      File.open(File.join(configdir, 'default', 'config.yml'), 'w') do |f|
-        f.puts "site: http://dev1.hackpad.com"
-      end
-      Dir.exist?(File.join(configdir, 'another')) || FileUtils.mkdir(File.join(configdir, 'another'))
-      File.open(File.join(configdir, 'another', 'config.yml'), 'w') do |f|
-        f.puts "site: http://dev2.hackpad.com"
-      end
-    end
-    after do
-      FileUtils.rm File.join(configdir, 'default', 'config.yml')
-      FileUtils.rm File.join(configdir, 'another', 'config.yml')
-    end
-    it { expect(subject.list_sites).to be_an Array }
-    it { expect(subject.list_sites[0]).to be_an OpenStruct }
-    it { expect(subject.list_sites[0].name).to eq 'default' }
-    it { expect(subject.list_sites[0].url).to eq 'http://dev1.hackpad.com' }
   end
 
   describe '.read_list' do
@@ -49,7 +33,13 @@ describe Hackpad::Cli::Store do
   describe '.exist?' do
 
     context 'when refresh option is set,' do
-      let(:options) { { configdir: configdir, workspace: 'default', refresh: true } }
+      let(:options) { OpenStruct.new(
+          configdir: configdir,
+          workspace: 'default',
+          workspacedir: File.join(configdir, 'default'),
+          refresh: true
+          )
+        }
       before do
         subject.prepare options
         FileUtils.touch File.join(configdir, 'default', 'pads', 'txt', 'xxx')

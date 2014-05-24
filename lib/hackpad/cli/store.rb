@@ -10,10 +10,9 @@ module Hackpad
       module_function
 
       def prepare(config)
-        @refresh = config[:refresh]
-        @configdir = config[:configdir]
-        dir = File.join(@configdir, config[:workspace])
-        @pads_dir = File.join(dir, 'pads')
+        @refresh = config.refresh
+        @configdir = config.configdir
+        @pads_dir = File.join(config.workspacedir, 'pads')
         @list_cache = File.join(@pads_dir, 'padlist')
         prepare_dirs @pads_dir
       end
@@ -24,14 +23,6 @@ module Hackpad
 
       def exist?(*path)
         !@refresh && File.exist?(File.join(@pads_dir, *path))
-      end
-
-      def list_sites
-        Dir.glob(File.join(@configdir, '*', 'config.yml')).reduce([]) do |a, path|
-          site = File.basename(File.dirname(path))
-          a << OpenStruct.new(name: site, url: Config.load(configdir: @configdir, workspace: site)['site'])
-          a
-        end
       end
 
       def save(pad, ext)

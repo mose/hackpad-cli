@@ -4,6 +4,9 @@ Hackpad-cli changelog
 v0.1.1 - wip
 -------------------
 
+- add a command `sites` to list workspaces
+- move config file from ~/.hackpad-cli/default.yml to ~/.hackpad-cli/default/config.ymlz
+
 v0.1.0 - 2014-05-17
 -------------------
 

@@ -5,59 +5,64 @@ require 'hackpad/cli/client'
 
 describe Hackpad::Cli::Client do
   let(:configdir) { File.expand_path('../../../../files', __FILE__) }
+  let(:configfile) { File.join(configdir, 'config.yml') }
+  let(:workspacedir) { File.join(configdir, 'default') }
+  let(:workspacefile) { File.join(workspacedir, 'config.yml') }
+  let(:configvars) { { 'use_colors' => true, 'workspace' => 'default' } }
+  let(:workspacevars) { { 'client_id' => '123', 'secret' => 'toto', 'site' => 'http://example.com' } }
   let(:options) { { configdir: configdir, workspace: 'default' } }
   let(:format) { "%-20s %s\n" }
+  let(:output) { StringIO.new }
+  before { FileUtils.mkdir_p configdir }
+  before { FileUtils.mkdir_p workspacedir }
+  before { File.open(configfile, 'w') { |f| f.puts YAML.dump(configvars) } }
+  before { File.open(workspacefile, 'w') { |f| f.puts YAML.dump(workspacevars) } }
+  after  { FileUtils.rm configfile if File.exist?(configfile) }
+  after  { FileUtils.rm workspacefile if File.exist?(workspacefile) }
 
   describe '.new' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load) }
 
     context 'when default options are passed,' do
       let(:client) { Hackpad::Cli::Client.new options }
       it { expect(client).to be_a Hackpad::Cli::Client }
-      context 'when colorization is expected,' do
-        it { expect('x'.blue).to eq "\e[0;34;49mx\e[0m" }
-      end
     end
 
     context 'when plain text is required,' do
       context 'when colorization is not expected,' do
         before { Hackpad::Cli::Client.new options.merge(plain: true) }
-        after { load 'colorize.rb' }
-        it { expect('x'.blue).to eq 'x' }
+        it { expect(Paint.mode).to eq 0 }
       end
     end
   end
 
-  describe '.sites' do
-    before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
-    before do
-      Hackpad::Cli::Store.stub(:list_sites).and_return([
-        OpenStruct.new(name: 'default', url: 'http://dev1.hackpad.com'),
-        OpenStruct.new(name: 'another', url: 'http://dev2.hackpad.com')
-      ])
-    end
-    let(:client) { Hackpad::Cli::Client.new options }
+  describe '.workspaces' do
+    let(:client) { Hackpad::Cli::Client.new(options, output) }
+    let(:workspacedir2) { File.join(configdir, 'default2') }
+    let(:workspacefile2) { File.join(workspacedir2, 'config.yml') }
+    let(:workspacevars2) { { 'client_id' => '321', 'secret' => 'otot', 'site' => 'http://2.example.com' } }
+    before { FileUtils.mkdir_p workspacedir2 }
+    before { File.open(workspacefile2, 'w') { |f| f.puts YAML.dump(workspacevars2) } }
+    after  { FileUtils.rm workspacefile2 if File.exist?(workspacefile2) }
+
     it do
-      expect(STDOUT).to receive(:printf).with(format, 'default', "http://dev1.hackpad.com")
-      expect(STDOUT).to receive(:printf).with(format, 'another', "http://dev2.hackpad.com")
-      client.sites
+      expect(output).to receive(:printf).with(format, 'default', 'http://example.com')
+      expect(output).to receive(:printf).with(format, 'default2', 'http://2.example.com')
+      client.workspaces
     end
   end
 
   describe '.stats' do
     let(:timestamp) { Time.new(2013, 10, 2) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
     before { Hackpad::Cli::Store.stub(:count_pads).and_return(12) }
     before { Hackpad::Cli::Store.stub(:last_refresh).and_return(timestamp) }
-    let(:client) { Hackpad::Cli::Client.new options }
+    let(:client) { Hackpad::Cli::Client.new(options, output) }
     it do
-      expect(STDOUT).to receive(:printf).with(format, 'Site', "\e[0;34;49mhttp://test.dev\e[0m")
-      expect(STDOUT).to receive(:printf).with(format, 'Cached Pads', 12)
-      expect(STDOUT).to receive(:printf).with(format, 'Last Refresh', timestamp)
+      expect(output).to receive(:printf).with(format, 'Site', Paint[workspacevars['site'], :blue])
+      expect(output).to receive(:printf).with(format, 'Cached Pads', 12)
+      expect(output).to receive(:printf).with(format, 'Last Refresh', timestamp)
       client.stats
     end
   end
@@ -65,7 +70,6 @@ describe Hackpad::Cli::Client do
   describe '.search' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
     before do
       Hackpad::Cli::Api.stub(:search)
         .with('xxx', 0)
@@ -78,18 +82,18 @@ describe Hackpad::Cli::Client do
         )
     end
     context 'when default options are used,' do
-      let(:client) { Hackpad::Cli::Client.new options }
+      let(:client) { Hackpad::Cli::Client.new(options, output) }
       it do
-        expect(STDOUT).to receive(:puts).with("\e[1;39;49mxxxxxx\e[0m - \e[0;33;49mxtitle\e[0m")
-        expect(STDOUT).to receive(:puts).with("   context \e[1;36;49mx\e[0m context")
+        expect(output).to receive(:puts).with("#{Paint['xxxxxx', :bold]} - #{Paint['xtitle', :yellow]}")
+        expect(output).to receive(:puts).with("   context #{Paint['x', :cyan, :bold]} context")
         client.search 'xxx'
       end
     end
     context 'when options sets urls to true,' do
-      let(:client) { Hackpad::Cli::Client.new options.merge(urls: true) }
+      let(:client) { Hackpad::Cli::Client.new(options.merge(urls: true), output) }
       it do
-        expect(STDOUT).to receive(:puts).with("http://test.dev/\e[1;39;49mxxxxxx\e[0m - \e[0;33;49mxtitle\e[0m")
-        expect(STDOUT).to receive(:puts).with("   context \e[1;36;49mx\e[0m context")
+        expect(output).to receive(:puts).with("#{workspacevars['site']}/#{Paint['xxxxxx', :bold]} - #{Paint['xtitle', :yellow]}")
+        expect(output).to receive(:puts).with("   context #{Paint['x', :cyan, :bold]} context")
         client.search 'xxx'
       end
     end
@@ -98,22 +102,21 @@ describe Hackpad::Cli::Client do
   describe '.list' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
     before do
       Hackpad::Cli::Padlist.stub(:get_list)
         .and_return([OpenStruct.new(id: 'xxxxxx', title: 'xtitle')])
     end
     context 'when default options are used,' do
-      let(:client) { Hackpad::Cli::Client.new options }
+      let(:client) { Hackpad::Cli::Client.new(options, output) }
       it do
-        expect(STDOUT).to receive(:puts).with(['xxxxxx - xtitle'])
+        expect(output).to receive(:puts).with(['xxxxxx - xtitle'])
         client.list
       end
     end
     context 'when options sets urls to true,' do
-      let(:client) { Hackpad::Cli::Client.new options.merge(urls: true) }
+      let(:client) { Hackpad::Cli::Client.new(options.merge(urls: true), output) }
       it do
-        expect(STDOUT).to receive(:puts).with(['http://test.dev/xxxxxx - xtitle'])
+        expect(output).to receive(:puts).with(["#{workspacevars['site']}/xxxxxx - xtitle"])
         client.list
       end
     end
@@ -122,7 +125,6 @@ describe Hackpad::Cli::Client do
   describe '.check' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
 
     context 'when there is a new pad,' do
       before do
@@ -130,28 +132,28 @@ describe Hackpad::Cli::Client do
           .and_return([OpenStruct.new(id: 'xxxxxx', title: 'xtitle')])
       end
       context 'when default options are used,' do
-        let(:client) { Hackpad::Cli::Client.new options }
+        let(:client) { Hackpad::Cli::Client.new(options, output) }
         it do
-          expect(STDOUT).to receive(:puts).with('New pads:')
-          expect(STDOUT).to receive(:puts).with(['xxxxxx - xtitle'])
+          expect(output).to receive(:puts).with('New pads:')
+          expect(output).to receive(:puts).with(['xxxxxx - xtitle'])
           client.check
         end
       end
       context 'when options sets urls to true,' do
-        let(:client) { Hackpad::Cli::Client.new options.merge(urls: true) }
+        let(:client) { Hackpad::Cli::Client.new(options.merge(urls: true), output) }
         it do
-          expect(STDOUT).to receive(:puts).with('New pads:')
-          expect(STDOUT).to receive(:puts).with(['http://test.dev/xxxxxx - xtitle'])
+          expect(output).to receive(:puts).with('New pads:')
+          expect(output).to receive(:puts).with(["#{workspacevars['site']}/xxxxxx - xtitle"])
           client.check
         end
       end
     end
     context 'when there is no new pad,' do
       before { Hackpad::Cli::Padlist.stub(:check_list).and_return([]) }
-      let(:client) { Hackpad::Cli::Client.new options }
+      let(:client) { Hackpad::Cli::Client.new(options, output) }
       it do
-        expect(STDOUT).to receive(:puts).with('New pads:')
-        expect(STDOUT).to receive(:puts).with('There is no new pad.')
+        expect(output).to receive(:puts).with('New pads:')
+        expect(output).to receive(:puts).with('There is no new pad.')
         client.check
       end
     end
@@ -160,8 +162,7 @@ describe Hackpad::Cli::Client do
   describe '.info' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
-    let(:client) { Hackpad::Cli::Client.new options }
+    let(:client) { Hackpad::Cli::Client.new(options, output) }
     let(:pad) { double Hackpad::Cli::Pad }
     before { Hackpad::Cli::Pad.stub(:new).with('123').and_return pad }
 
@@ -179,14 +180,14 @@ describe Hackpad::Cli::Client do
       before { pad.stub(:moderated).and_return('false') }
       before { pad.stub(:cached_at).and_return }
       it do
-        expect(STDOUT).to receive(:printf).with(format, 'Id', "\e[1;39;49m123\e[0m")
-        expect(STDOUT).to receive(:printf).with(format, 'Title', "\e[0;33;49mtitle1\e[0m")
-        expect(STDOUT).to receive(:printf).with(format, 'URI', 'http://test.dev/123')
-        expect(STDOUT).to receive(:printf).with(format, 'Chars', '20')
-        expect(STDOUT).to receive(:printf).with(format, 'Lines', '2')
-        expect(STDOUT).to receive(:printf).with(format, 'Guest Policy', 'open')
-        expect(STDOUT).to receive(:printf).with(format, 'Moderated', 'false')
-        expect(STDOUT).to receive(:printf).with(format, 'Cached', 'unknown')
+        expect(output).to receive(:printf).with(format, 'Id', Paint["123", :bold])
+        expect(output).to receive(:printf).with(format, 'Title', Paint['title1', :yellow])
+        expect(output).to receive(:printf).with(format, 'URI', "#{workspacevars['site']}/123")
+        expect(output).to receive(:printf).with(format, 'Chars', '20')
+        expect(output).to receive(:printf).with(format, 'Lines', '2')
+        expect(output).to receive(:printf).with(format, 'Guest Policy', 'open')
+        expect(output).to receive(:printf).with(format, 'Moderated', 'false')
+        expect(output).to receive(:printf).with(format, 'Cached', 'unknown')
         client.info '123'
       end
     end
@@ -196,8 +197,7 @@ describe Hackpad::Cli::Client do
   describe '.show' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
-    before { Hackpad::Cli::Config.stub(:load).and_return('site' => 'http://test.dev') }
-    let(:client) { Hackpad::Cli::Client.new options }
+    let(:client) { Hackpad::Cli::Client.new(options, output) }
     let(:pad) { double Hackpad::Cli::Pad }
     before { Hackpad::Cli::Pad.stub(:new).with('123').and_return pad }
     before { pad.stub(:load) }
@@ -205,7 +205,7 @@ describe Hackpad::Cli::Client do
     context 'when a txt version is asked,' do
       before { pad.stub(:content).and_return('this is content') }
       it do
-        expect(STDOUT).to receive(:puts).with('this is content')
+        expect(output).to receive(:puts).with('this is content')
         client.show '123', 'txt'
       end
     end
@@ -213,7 +213,7 @@ describe Hackpad::Cli::Client do
     context 'when a html version is asked,' do
       before { pad.stub(:content).and_return('<ul><li>this is content</li></ul>') }
       it do
-        expect(STDOUT).to receive(:puts).with('<ul><li>this is content</li></ul>')
+        expect(output).to receive(:puts).with('<ul><li>this is content</li></ul>')
         client.show '123', 'html'
       end
     end
@@ -226,7 +226,7 @@ describe Hackpad::Cli::Client do
           .and_return('- this is content')
       end
       it do
-        expect(STDOUT).to receive(:puts).with('- this is content')
+        expect(output).to receive(:puts).with('- this is content')
         client.show '123', 'md'
       end
     end

@@ -43,9 +43,9 @@ module Hackpad
 
       default_task :help
 
-      desc 'sites', 'Lists configurated hackpad workspaces.'
-      def sites
-        Hackpad::Cli::Client.new(options).sites
+      desc 'workspaces', 'Lists configurated hackpad workspaces.'
+      def workspaces
+        Hackpad::Cli::Client.new(options).workspaces
       end
 
       desc 'stats', 'Lists configuration values.'
@@ -86,12 +86,6 @@ module Hackpad
       desc 'version', 'Displays the hackpad-cli version.'
       def version
         puts Hackpad::Cli::VERSION
-      end
-
-      desc 'colors', 'displays colorize color matrix.', hide: true
-      def colors
-        require 'colorize'
-        String.color_matrix ' xoxo '
       end
 
     end

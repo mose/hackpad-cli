@@ -7,9 +7,9 @@ require 'hackpad/cli/api'
 WebMock.disable_net_connect!(allow: 'codeclimate.com')
 
 describe Hackpad::Cli::Api do
+  let(:config) { OpenStruct.new(site: 'http://x.hackpad.com', client_id: '123', secret: 'aaa') }
 
   describe '.search' do
-    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
     context 'when just a simple term is provided,' do
       it 'returns expected json' do
@@ -25,7 +25,6 @@ describe Hackpad::Cli::Api do
   end
 
   describe '.list' do
-    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
     it 'returns expected json' do
       stub_request(:get, 'http://x.hackpad.com/api/1.0/pads/all')
@@ -35,7 +34,6 @@ describe Hackpad::Cli::Api do
   end
 
   describe '.read_options' do
-    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
     it 'returns expected json' do
       stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/options')
@@ -45,7 +43,6 @@ describe Hackpad::Cli::Api do
   end
 
   describe '.read' do
-    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
     it 'returns expected json' do
       stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content.html')
@@ -55,7 +52,6 @@ describe Hackpad::Cli::Api do
   end
 
   describe '.get' do
-    let(:config) { { 'site' => 'http://x.hackpad.com', 'client_id' => '123', 'secret' => 'aaa' } }
     before { Hackpad::Cli::Api.prepare config }
     context 'when proper crendential are provided,' do
       it 'all goes well' do

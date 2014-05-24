@@ -27,9 +27,9 @@ describe Hackpad::Cli::Runner do
   end
 
   it 'calls the sites method in client class' do
-    Object.stub(:sites)
+    Object.stub(:workspaces)
     cli.shell.mute do
-      cli.sites
+      cli.workspaces
     end
   end
 
@@ -65,13 +65,6 @@ describe Hackpad::Cli::Runner do
     Object.stub(:show)
     cli.shell.mute do
       cli.show 'pad', 'md'
-    end
-  end
-
-  it 'calls the colors method in client class' do
-    String.stub(:color_matrix).with(' xoxo ')
-    cli.shell.mute do
-      cli.colors
     end
   end
 
