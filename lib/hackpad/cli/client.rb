@@ -65,7 +65,7 @@ module Hackpad
         pad.load 'txt'
         table 'Id', Paint[id, :bold]
         table 'Title', Paint[pad.title, :yellow]
-        table 'URI', "#{@config['site']}/#{id}"
+        table 'URI', "#{@config.site}/#{id}"
         table 'Chars', "#{pad.chars}"
         table 'Lines', "#{pad.lines}"
         table 'Guest Policy', "#{pad.guest_policy}"

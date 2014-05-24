@@ -9,12 +9,12 @@ module Hackpad
 
       def initialize(options = nil, input = STDIN, output = STDOUT)
         super(options)
-        self['configdir'] ||= File.join(ENV['HOME'], '.hackpad-cli')
-        self['workspace'] ||= 'default'
-        self['refresh'] ||= false
-        self['urls'] ||= false
-        self['output'] = output
-        self['workspacedir'] = File.join(configdir, workspace)
+        self.configdir ||= File.join(ENV['HOME'], '.hackpad-cli')
+        self.workspace ||= 'default'
+        self.refresh ||= false
+        self.urls ||= false
+        self.output = output
+        self.workspacedir = File.join(configdir, workspace)
         setio input, output
         patch_1
         addvalues 'config'
@@ -22,12 +22,13 @@ module Hackpad
       end
 
       def addvalues(type)
-        dir = self["#{type}dir"]
+        dir = send("#{type}dir".to_sym)
         file = File.join(dir, 'config.yml')
         FileUtils.mkdir_p dir unless Dir.exist? dir
         send("setup_#{type}".to_sym, file) unless File.exist? file
         YAML.load_file(file).each do |k, v|
-          self[k] = v
+          new_ostruct_member(k)
+          send("#{k}=", v)
         end
       end
 
