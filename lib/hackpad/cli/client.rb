@@ -11,10 +11,13 @@ module Hackpad
   module Cli
     class Client
 
-      def initialize(options, output = STDOUT)
+      attr_reader :config
+
+      def initialize(options, input = STDIN, output = STDOUT)
         @output = output
+        @input = input
         @options = options
-        @config = Config.new @options
+        @config = Config.new @options, input, output
         Store.prepare @config
         Api.prepare @config
         if @options[:plain]
@@ -26,6 +29,10 @@ module Hackpad
         @config.workspaces.each do |s|
           table s.name, s.site
         end
+      end
+
+      def default
+        @config.change_default
       end
 
       def stats

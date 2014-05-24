@@ -48,6 +48,11 @@ module Hackpad
         Hackpad::Cli::Client.new(options).workspaces
       end
 
+      desc 'default', 'change the default workspace.'
+      def default
+        Hackpad::Cli::Client.new(options).default
+      end
+
       desc 'stats', 'Lists configuration values.'
       def stats
         Hackpad::Cli::Client.new(options).stats

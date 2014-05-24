@@ -26,10 +26,17 @@ describe Hackpad::Cli::Runner do
     end
   end
 
-  it 'calls the sites method in client class' do
+  it 'calls the workspaces method in client class' do
     Object.stub(:workspaces)
     cli.shell.mute do
       cli.workspaces
+    end
+  end
+
+  it 'calls the default method in client class' do
+    Object.stub(:default)
+    cli.shell.mute do
+      cli.default
     end
   end
 

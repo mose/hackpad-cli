@@ -1,9 +1,10 @@
 Hackpad-cli changelog
 =====================
 
-v0.1.1 - wip
+v0.1.1 - 2014-05-25
 -------------------
 
+- add a `default` command to switch workspaces
 - renamed `check` into `getnew` to make it clearer what it does
 - switch from colorize to paint gems (monkey patch of colorize was itchy)
 - switch the prompt code to another gem called cliprompt

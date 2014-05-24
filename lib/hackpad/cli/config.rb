@@ -9,6 +9,8 @@ module Hackpad
 
       def initialize(options = nil, input = STDIN, output = STDOUT)
         super(options)
+        @@input = input
+        @@output = output
         self.configdir ||= File.join(ENV['HOME'], '.hackpad-cli')
         self.workspace ||= 'default'
         self.refresh ||= false
@@ -44,9 +46,7 @@ module Hackpad
         output.puts Paint['Create a new hackpad-cli configuration:', :blue]
         values['use_colors'] = guess 'HPCLI_COLORS', 'Do you want a colored output?', 'Yn'
         values['workspace'] = guess 'HPCLI_WORKSPACE', 'What is the name of the default workspace?', 'default'
-        File.open(file, 'w') do |f|
-          f.write YAML.dump(values)
-        end
+        write(file, values)
       end
 
       def setup_workspace(file)
@@ -56,14 +56,29 @@ module Hackpad
         values['client_id'] = guess 'HPCLI_CLIENTID', 'What is your Client ID?'
         values['secret'] = guess 'HPCLI_SECRET', 'What is your Secret Key?'
         values['site'] = guess('HPCLI_URL', 'What is the URI of your workspace? (ex. https://xxx.hackapd.com)').gsub(/\/$/, '')
-        File.open(file, 'w') do |f|
-          f.write YAML.dump(values)
-        end
+        write(file, values)
+      end
+
+      def change_default
+        values = {}
+        values['use_colors'] = use_colors
+        values['workspace'] = ask 'What workspace do you want to use as default from now on?',
+          choices: workspaces.map(&:name),
+          default: workspace,
+          aslist: true
+        file = File.join(configdir, 'config.yml')
+        write(file, values)
       end
 
       def patch_1
         if File.exist? File.join(configdir, "#{workspace}.yml")
           FileUtils.mv File.join(configdir, "#{workspace}.yml"), File.join(configdir, workspace, 'config.yml')
+        end
+      end
+
+      def write(file, values)
+        File.open(file, 'w') do |f|
+          f.write YAML.dump(values)
         end
       end
 

@@ -42,6 +42,7 @@ Usage
 
 ```
 Commands:
+  hpcli default                 # change the default workspace.
   hpcli getnew                  # Downloads the new pads the are not cached yet (options: -u to show urls).
   hpcli help [COMMAND]          # Describe available commands or one specific command
   hpcli info [pad_id]           # gets info for the pad <pad_id>.
