@@ -42,7 +42,7 @@ Usage
 
 ```
 Commands:
-  hpcli check                   # Checks differences between local cache and remote list (options: -u to show urls).
+  hpcli getnew                  # Downloads the new pads the are not cached yet (options: -u to show urls).
   hpcli help [COMMAND]          # Describe available commands or one specific command
   hpcli info [pad_id]           # gets info for the pad <pad_id>.
   hpcli list                    # Lists available pads (options: -u to show urls, -r to refresh).

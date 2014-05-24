@@ -4,6 +4,7 @@ Hackpad-cli changelog
 v0.1.1 - wip
 -------------------
 
+- renamed `check` into `getnew` to make it clearer what it does
 - switch from colorize to paint gems (monkey patch of colorize was itchy)
 - switch the prompt code to another gem called cliprompt
 - add a command `workspaces` to list workspaces
