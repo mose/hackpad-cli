@@ -35,10 +35,11 @@ module Hackpad
       end
 
       def workspaces
-        Dir.glob(File.join(configdir, '*', 'config.yml')).reduce([]) do |a, path|
+        w = Dir.glob(File.join(configdir, '*', 'config.yml')).reduce([]) do |a, path|
           a << OpenStruct.new(name: File.basename(File.dirname(path)), site: YAML.load_file(path)['site'])
           a
         end
+        w.sort_by { |s| s.name }
       end
 
       def setup_config(file)
