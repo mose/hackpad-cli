@@ -39,14 +39,14 @@ describe Hackpad::Cli::Padlist do
     end
   end
 
-  describe '.check_list' do
+  describe '.get_new' do
     before { Hackpad::Cli::Api.stub(:list).and_return(%w(123 456)) }
     let(:pad) { double Hackpad::Cli::Pad }
     before { Hackpad::Cli::Pad.stub(:new).and_return(pad, pad) }
 
     context 'when there is no new pad,' do
       before { pad.stub(:cached?).and_return(true, true) }
-      it { expect(subject.check_list).to eq [] }
+      it { expect(subject.get_new).to eq [] }
     end
 
     context 'when there is no one new pad,' do
@@ -54,7 +54,7 @@ describe Hackpad::Cli::Padlist do
       before { pad.stub(:cached?).and_return(true, false) }
       before { pad.stub(:load) }
       before { pad.stub(:title).and_return('title2') }
-      it { expect(subject.check_list).to eq [pad2] }
+      it { expect(subject.get_new).to eq [pad2] }
     end
 
     context 'when there is no 2 new pads,' do
@@ -63,7 +63,7 @@ describe Hackpad::Cli::Padlist do
       before { pad.stub(:cached?).and_return(false, false) }
       before { pad.stub(:load).and_return(nil, nil) }
       before { pad.stub(:title).and_return('title1', 'title2') }
-      it { expect(subject.check_list).to eq [pad1, pad2] }
+      it { expect(subject.get_new).to eq [pad1, pad2] }
     end
   end
 

@@ -40,10 +40,10 @@ describe Hackpad::Cli::Runner do
     end
   end
 
-  it 'calls the check method in client class' do
-    Object.stub(:check)
+  it 'calls the getnew method in client class' do
+    Object.stub(:getnew)
     cli.shell.mute do
-      cli.check
+      cli.getnew
     end
   end
 

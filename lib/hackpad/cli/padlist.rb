@@ -31,7 +31,7 @@ module Hackpad
         OpenStruct.new(id: id, title: pad.title)
       end
 
-      def check_list
+      def get_new
         all = []
         list = Api.list
         list.each do |a|

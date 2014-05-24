@@ -122,13 +122,13 @@ describe Hackpad::Cli::Client do
     end
   end
 
-  describe '.check' do
+  describe '.getnew' do
     before { Hackpad::Cli::Api.stub(:prepare) }
     before { Hackpad::Cli::Store.stub(:prepare) }
 
     context 'when there is a new pad,' do
       before do
-        Hackpad::Cli::Padlist.stub(:check_list)
+        Hackpad::Cli::Padlist.stub(:get_new)
           .and_return([OpenStruct.new(id: 'xxxxxx', title: 'xtitle')])
       end
       context 'when default options are used,' do
@@ -136,7 +136,7 @@ describe Hackpad::Cli::Client do
         it do
           expect(output).to receive(:puts).with('New pads:')
           expect(output).to receive(:puts).with(['xxxxxx - xtitle'])
-          client.check
+          client.getnew
         end
       end
       context 'when options sets urls to true,' do
@@ -144,17 +144,17 @@ describe Hackpad::Cli::Client do
         it do
           expect(output).to receive(:puts).with('New pads:')
           expect(output).to receive(:puts).with(["#{workspacevars['site']}/xxxxxx - xtitle"])
-          client.check
+          client.getnew
         end
       end
     end
     context 'when there is no new pad,' do
-      before { Hackpad::Cli::Padlist.stub(:check_list).and_return([]) }
+      before { Hackpad::Cli::Padlist.stub(:get_new).and_return([]) }
       let(:client) { Hackpad::Cli::Client.new(options, output) }
       it do
         expect(output).to receive(:puts).with('New pads:')
         expect(output).to receive(:puts).with('There is no new pad.')
-        client.check
+        client.getnew
       end
     end
   end

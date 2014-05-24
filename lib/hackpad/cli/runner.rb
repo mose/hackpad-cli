@@ -66,10 +66,10 @@ module Hackpad
         Hackpad::Cli::Client.new(options).list
       end
 
-      desc 'check', 'Checks differences between local cache and remote list (options: -u to show urls).'
+      desc 'getnew', 'Downloads the new pads the are not cached yet (options: -u to show urls).'
       method_option(*url_option)
-      def check
-        Hackpad::Cli::Client.new(options).check
+      def getnew
+        Hackpad::Cli::Client.new(options).getnew
       end
 
       desc 'info [pad_id]', 'gets info for the pad <pad_id>.'
