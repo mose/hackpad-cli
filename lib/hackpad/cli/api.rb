@@ -1,6 +1,7 @@
 require 'oauth'
 require 'net/http'
 require 'json'
+require 'reverse_markdown'
 
 module Hackpad
   module Cli
@@ -33,13 +34,22 @@ module Hackpad
       end
 
       def read(id, ext)
-        get "/api/1.0/pad/#{id}/content.#{ext}", false
+        realext = (ext == 'md') ? 'html' : ext
+        get "/api/1.0/pad/#{id}/content.#{realext}", false, (ext == 'md')
       end
 
-      def get(url, json = true)
+      def get(url, json = true, to_md = false)
         res = @token.get url, 'User-Agent' => "hackpad-cli v#{Hackpad::Cli::VERSION}"
         if res.is_a? Net::HTTPSuccess
-          json ? JSON.parse(res.body) : res.body
+          if json
+            JSON.parse(res.body)
+          else
+            if to_md
+              ReverseMarkdown.convert(res.body, github_flavored: true).strip
+            else
+              res.body
+            end
+          end
         else
           fail ApiException, "HTTP error, code #{res.code}"
         end

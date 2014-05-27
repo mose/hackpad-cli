@@ -59,7 +59,6 @@ module Hackpad
         Store.exist? 'meta', @id
       end
 
-
     end
   end
 end

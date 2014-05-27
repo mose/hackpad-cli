@@ -4,6 +4,8 @@ Hackpad-cli changelog
 v0.1.2 - wip
 -------------------
 
+- add a visual indication of currently used workspace in the `workspaces` command
+
 v0.1.1 - 2014-05-25
 -------------------
 

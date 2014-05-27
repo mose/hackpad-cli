@@ -49,7 +49,7 @@ describe Hackpad::Cli::Client do
     after  { FileUtils.rm workspacefile2 if File.exist?(workspacefile2) }
 
     it do
-      expect(output).to receive(:printf).with(format, 'default', 'http://example.com')
+      expect(output).to receive(:printf).with(format, '> default', 'http://example.com')
       expect(output).to receive(:printf).with(format, 'default2', 'http://2.example.com')
       client.workspaces
     end
@@ -66,9 +66,7 @@ describe Hackpad::Cli::Client do
     after  { FileUtils.rm workspacefile2 if File.exist?(workspacefile2) }
 
     it do
-      expect(output).to receive(:puts).with('What workspace do you want to use as default from now on?')
-      expect(output).to receive(:printf).with("> %-3s %s\n", 0, "default")
-      expect(output).to receive(:printf).with("  %-3s %s\n", 1, "default2")
+      expect(output).to receive(:print).with("What workspace do you want to use as default from now on? \n> 0   default\n  1   default2\nChoose a number: [0] ")
       client.default
       expect(YAML.load_file(configfile)['workspace']).to eq 'default2'
     end
@@ -240,12 +238,7 @@ describe Hackpad::Cli::Client do
     end
 
     context 'when a markdown version is asked,' do
-      before { pad.stub(:content).and_return('<ul><li>this is content</li></ul>') }
-      before do
-        ReverseMarkdown.stub(:convert)
-          .with('<ul><li>this is content</li></ul>', github_flavored: true)
-          .and_return('- this is content')
-      end
+      before { pad.stub(:content).and_return('- this is content') }
       it do
         expect(output).to receive(:puts).with('- this is content')
         client.show '123', 'md'

@@ -1,4 +1,3 @@
-require 'reverse_markdown'
 require 'paint'
 
 require_relative 'config'
@@ -27,6 +26,9 @@ module Hackpad
 
       def workspaces
         @config.workspaces.each do |s|
+          if s.name == @config.workspace
+            s.name = "> #{s.name}"
+          end
           table s.name, s.site
         end
       end
@@ -81,14 +83,9 @@ module Hackpad
       end
 
       def show(id, format)
-        ext = (format == 'md') ? 'html' : format
         pad = Pad.new id
-        pad.load ext
-        if format == 'md'
-          @output.puts ReverseMarkdown.convert(pad.content, github_flavored: true)
-        else
-          @output.puts pad.content
-        end
+        pad.load format
+        @output.puts pad.content
       end
 
       private
