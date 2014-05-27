@@ -45,7 +45,7 @@ module Hackpad
             JSON.parse(res.body)
           else
             if to_md
-              ReverseMarkdown.convert(res.body, github_flavored: true).strip
+              cleanup_md(res.body)
             else
               res.body
             end
@@ -53,6 +53,14 @@ module Hackpad
         else
           fail ApiException, "HTTP error, code #{res.code}"
         end
+      end
+
+      def cleanup_md(text)
+        back = ReverseMarkdown.convert(text, github_flavored: true).strip
+        back.sub!(/<head>.*<\/head>\n/m, '')
+        back.gsub!(/-([^\n]+)\n\n  -/m, "-\\1\n  -")
+        back.gsub!(/\n(  )*-([^\n]+)\n?\n(  )*-([^\n]+)\n?\n/m, "\n\\1-\\2\n\\3-\\4\n")
+        back.gsub(/\n\n\*\*([^\*]+)\*\*\n\n/, "\n\n### \\1\n\n")
       end
 
     end
