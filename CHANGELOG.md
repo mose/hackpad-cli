@@ -1,9 +1,12 @@
 Hackpad-cli changelog
 =====================
 
-v0.1.2 - wip
+v0.1.2 - 2014-05-27
 -------------------
 
+- improve markdown cleanup:
+  - transform isolated bold in h3
+  - remove parasite lines in list that are left by non-displayed comments
 - add a visual indication of currently used workspace in the `workspaces` command
 
 v0.1.1 - 2014-05-25
