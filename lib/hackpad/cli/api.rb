@@ -3,6 +3,9 @@ require 'net/http'
 require 'json'
 require 'reverse_markdown'
 
+require_relative '../../reverse_markdown/converters/head'
+require_relative '../../reverse_markdown/converters/li'
+
 module Hackpad
   module Cli
 
@@ -57,10 +60,11 @@ module Hackpad
 
       def cleanup_md(text)
         back = ReverseMarkdown.convert(text, github_flavored: true).strip
-        back.sub!(/<head>.*<\/head>\n/m, '')
-        back.gsub!(/-([^\n]+)\n\n  -/m, "-\\1\n  -")
-        back.gsub!(/\n(  )*-([^\n]+)\n?\n(  )*-([^\n]+)\n?\n/m, "\n\\1-\\2\n\\3-\\4\n")
-        back.gsub(/\n\n\*\*([^\*]+)\*\*\n\n/, "\n\n### \\1\n\n")
+        back.gsub!(/\n-\s*\n/m, "\n") # empty list items
+        back.gsub!(/\n\\\*\s*\n/m, "\n") # images are shown as \*
+        back.gsub!(/-([^\n]+)\n\n  -/m, "-\\1\n  -") # avoid extra blank lines in lists
+        back.gsub!(/\n(  )*-([^\n]+)\n?\n(  )*-([^\n]+)\n?\n/m, "\n\\1-\\2\n\\3-\\4\n") # another more generalist for lists
+        back.gsub(/\n\n?\*\*([^\*]+)\*\*\n\n?/, "\n\n### \\1\n\n") # transform isolated titles from bold to h3
       end
 
     end
