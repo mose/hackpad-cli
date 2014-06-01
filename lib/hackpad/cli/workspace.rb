@@ -24,6 +24,14 @@ module Hackpad
         write values
       end
 
+      def create
+        self.name = ask "What is the name of the new workspace?"
+        self.basedir = File.expand_path("../#{self.name}", self.basedir)
+        self.basefile = File.join(self.basedir, 'config.yml')
+        prepare_dirs
+        setup
+      end
+
     end
   end
 end

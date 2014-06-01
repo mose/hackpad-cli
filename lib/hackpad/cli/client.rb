@@ -1,5 +1,4 @@
 require 'paint'
-require 'pp'
 
 require_relative 'config'
 require_relative 'workspace'
@@ -18,12 +17,16 @@ module Hackpad
         @output = output
         @input = input
         @config = Config.new options, @input, @output
-        @workspace = Workspace.new({ basedir: File.join(@config.basedir, @config.workspace), name: @config.workspace }, @input, @output)
-        Store.prepare @config, @workspace
-        Api.prepare @workspace
         if options[:plain] == true || @config.use_colors == false
           Paint.mode = 0
         end
+        @workspace = Workspace.new({ basedir: File.join(@config.basedir, @config.workspace), name: @config.workspace }, @input, @output)
+        Store.prepare @config, @workspace
+        Api.prepare @workspace
+      end
+
+      def add
+        @workspace.clone.create
       end
 
       def workspaces

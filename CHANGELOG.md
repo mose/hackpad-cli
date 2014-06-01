@@ -4,6 +4,9 @@ Hackpad-cli changelog
 v0.1.3 - wip
 -------------------
 
+- add command `add` for adding a new workspace
+- refactor config management and move code to the configstruct gem
+
 v0.1.2 - 2014-05-27
 -------------------
 

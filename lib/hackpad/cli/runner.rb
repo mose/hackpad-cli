@@ -47,6 +47,11 @@ module Hackpad
         Hackpad::Cli::Client.new(options).workspaces
       end
 
+      desc 'add', 'Add a new workspace.'
+      def add
+        Hackpad::Cli::Client.new(options).add
+      end
+
       desc 'default', 'change the default workspace.'
       def default
         Hackpad::Cli::Client.new(options).default

@@ -26,6 +26,13 @@ describe Hackpad::Cli::Runner do
     end
   end
 
+  it 'calls the add method in client class' do
+    Object.stub(:add)
+    cli.shell.mute do
+      cli.add
+    end
+  end
+
   it 'calls the workspaces method in client class' do
     Object.stub(:workspaces)
     cli.shell.mute do

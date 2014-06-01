@@ -38,4 +38,18 @@ describe Hackpad::Cli::Workspace do
     end
   end
 
+  describe '.create' do
+    let(:workspacevars) { { 'client_id' => '123', 'secret' => 'toto', 'site' => 'http://example.com' } }
+    before { File.open(workspacefile, 'w') { |f| f.puts YAML.dump(workspacevars) } }
+    let!(:workspace) { Hackpad::Cli::Workspace.new(options, input, output) }
+    let(:newone) { 'another' }
+    let(:newworkspacefile) { File.join(configdir, newone, 'config.yml') }
+    before { input.stub(:gets).and_return(newone, '123', 'toto', 'http://example.com') }
+    after { FileUtils.rm newworkspacefile if File.exist?(newworkspacefile) }
+    it {
+      workspace.create
+      expect(File.exist? newworkspacefile).to be_true
+    }
+  end
+
 end
