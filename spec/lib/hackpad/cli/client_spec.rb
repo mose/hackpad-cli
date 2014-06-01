@@ -11,7 +11,7 @@ describe Hackpad::Cli::Client do
   let(:workspacefile) { File.join(workspacedir, 'config.yml') }
   let(:configvars) { { 'use_colors' => true, 'workspace' => 'default' } }
   let(:workspacevars) { { 'client_id' => '123', 'secret' => 'toto', 'site' => 'http://example.com' } }
-  let(:options) { { configdir: configdir, workspace: 'default' } }
+  let(:options) { { basedir: configdir, workspace: 'default' } }
   let(:format) { "%-20s %s\n" }
   let(:input) { StringIO.new }
   let(:output) { StringIO.new }
@@ -49,9 +49,8 @@ describe Hackpad::Cli::Client do
     after  { FileUtils.rm workspacefile2 if File.exist?(workspacefile2) }
 
     it do
-      expect(output).to receive(:printf).with(format, '> default', 'http://example.com')
-      expect(output).to receive(:printf).with(format, 'default2', 'http://2.example.com')
       client.workspaces
+      expect(output.string).to eq "> default            http://example.com\ndefault2             http://2.example.com\n"
     end
   end
 
@@ -66,8 +65,8 @@ describe Hackpad::Cli::Client do
     after  { FileUtils.rm workspacefile2 if File.exist?(workspacefile2) }
 
     it do
-      expect(output).to receive(:print).with("What workspace do you want to use as default from now on? \n> 0   default\n  1   default2\nChoose a number: [0] ")
       client.default
+      expect(output.string).to eq "What workspace do you want to use as default from now on? \n> 0   default\n  1   default2\nChoose a number: [0] "
       expect(YAML.load_file(configfile)['workspace']).to eq 'default2'
     end
   end
@@ -79,10 +78,8 @@ describe Hackpad::Cli::Client do
     before { Hackpad::Cli::Store.stub(:last_refresh).and_return(timestamp) }
     let(:client) { Hackpad::Cli::Client.new(options, input, output) }
     it do
-      expect(output).to receive(:printf).with(format, 'Site', Paint[workspacevars['site'], :blue])
-      expect(output).to receive(:printf).with(format, 'Cached Pads', 12)
-      expect(output).to receive(:printf).with(format, 'Last Refresh', timestamp)
       client.stats
+      expect(output.string).to eq "Site                 #{Paint[workspacevars['site'], :blue]}\nCached Pads          12\nLast Refresh         2013-10-02 00:00:00 +0800\n"
     end
   end
 
@@ -111,9 +108,8 @@ describe Hackpad::Cli::Client do
     context 'when options sets urls to true,' do
       let(:client) { Hackpad::Cli::Client.new(options.merge(urls: true), input, output) }
       it do
-        expect(output).to receive(:puts).with("#{workspacevars['site']}/#{Paint['xxxxxx', :bold]} - #{Paint['xtitle', :yellow]}")
-        expect(output).to receive(:puts).with("   context #{Paint['x', :cyan, :bold]} context")
         client.search 'xxx'
+        expect(output.string).to eq "#{workspacevars['site']}/#{Paint['xxxxxx', :bold]} - #{Paint['xtitle', :yellow]}\n   context #{Paint['x', :cyan, :bold]} context\n"
       end
     end
   end

@@ -4,7 +4,6 @@ require 'json'
 require 'reverse_markdown'
 
 require_relative '../../reverse_markdown/converters/head'
-require_relative '../../reverse_markdown/converters/li'
 
 module Hackpad
   module Cli
@@ -15,13 +14,14 @@ module Hackpad
     module Api
       module_function
 
-      def prepare(config)
+      def prepare(workspace)
         consumer = OAuth::Consumer.new(
-          config.client_id,
-          config.secret,
-          site: config.site
+          workspace.client_id,
+          workspace.secret,
+          site: workspace.site
         )
         @token = OAuth::AccessToken.new consumer
+        @version = File.read(File.expand_path('../../../../CHANGELOG.md', __FILE__))[/([0-9]+\.[0-9]+\.[0-9]+)/]
       end
 
       def search(term, start = 0)
@@ -42,7 +42,7 @@ module Hackpad
       end
 
       def get(url, json = true, to_md = false)
-        res = @token.get url, 'User-Agent' => "hackpad-cli v#{Hackpad::Cli::VERSION}"
+        res = @token.get url, 'User-Agent' => "hackpad-cli v#{@version}"
         if res.is_a? Net::HTTPSuccess
           if json
             JSON.parse(res.body)

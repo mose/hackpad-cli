@@ -9,10 +9,10 @@ module Hackpad
     module Store
       module_function
 
-      def prepare(config)
+      def prepare(config, workspace)
         @refresh = config.refresh
-        @configdir = config.configdir
-        @pads_dir = File.join(config.workspacedir, 'pads')
+        @configdir = config.basedir
+        @pads_dir = File.join(workspace.basedir, 'pads')
         @list_cache = File.join(@pads_dir, 'padlist')
         prepare_dirs @pads_dir
       end

@@ -1,6 +1,8 @@
 require 'paint'
+require 'pp'
 
 require_relative 'config'
+require_relative 'workspace'
 require_relative 'api'
 require_relative 'store'
 require_relative 'pad'
@@ -15,11 +17,11 @@ module Hackpad
       def initialize(options, input = STDIN, output = STDOUT)
         @output = output
         @input = input
-        @options = options
-        @config = Config.new @options, input, output
-        Store.prepare @config
-        Api.prepare @config
-        if @options[:plain] == true || @config.use_colors == false
+        @config = Config.new options, @input, @output
+        @workspace = Workspace.new({ basedir: File.join(@config.basedir, @config.workspace), name: @config.workspace }, @input, @output)
+        Store.prepare @config, @workspace
+        Api.prepare @workspace
+        if options[:plain] == true || @config.use_colors == false
           Paint.mode = 0
         end
       end
@@ -38,7 +40,7 @@ module Hackpad
       end
 
       def stats
-        table 'Site', Paint[@config.site, :blue]
+        table 'Site', Paint[@workspace.site, :blue]
         table 'Cached Pads', Store.count_pads
         table 'Last Refresh', Store.last_refresh || 'not refreshed yet'
       end
@@ -52,7 +54,7 @@ module Hackpad
       end
 
       def list
-        @output.puts Padlist.get_list(@options['refresh']).map { |pad|
+        @output.puts Padlist.get_list(@config.refresh).map { |pad|
           padline pad
         }
       end
@@ -74,7 +76,7 @@ module Hackpad
         pad.load 'txt'
         table 'Id', Paint[id, :bold]
         table 'Title', Paint[pad.title, :yellow]
-        table 'URI', "#{@config.site}/#{id}"
+        table 'URI', "#{@workspace.site}/#{id}"
         table 'Chars', "#{pad.chars}"
         table 'Lines', "#{pad.lines}"
         table 'Guest Policy', "#{pad.guest_policy}"
@@ -91,7 +93,7 @@ module Hackpad
       private
 
       def padline(pad)
-        "#{(@config.site + '/') if @options[:urls]}#{pad.id} - #{pad.title}"
+        "#{(@workspace.site + '/') if @config.urls}#{pad.id} - #{pad.title}"
       end
 
       def unescape(s)
@@ -107,7 +109,7 @@ module Hackpad
       end
 
       def id_or_url(id)
-        "#{(@config.site + '/') if @options[:urls]}#{Paint[id, :bold]}"
+        "#{(@workspace.site + '/') if @config.urls}#{Paint[id, :bold]}"
       end
 
     end

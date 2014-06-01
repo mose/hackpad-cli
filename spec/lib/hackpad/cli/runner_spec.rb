@@ -55,7 +55,8 @@ describe Hackpad::Cli::Runner do
   end
 
   it 'calls the version method in client class' do
-    STDOUT.stub(:puts).with(Hackpad::Cli::VERSION)
+    version = File.read(File.expand_path('../../../../../CHANGELOG.md', __FILE__))[/([0-9]+\.[0-9]+\.[0-9]+)/]
+    STDOUT.stub(:puts).with(version)
     cli.shell.mute do
       cli.version
     end

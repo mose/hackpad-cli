@@ -1,7 +1,6 @@
 require 'thor'
 require 'yaml'
 require_relative 'client'
-require_relative 'version'
 
 module Hackpad
   module Cli
@@ -25,7 +24,7 @@ module Hackpad
         }
       ]
 
-      class_option :configdir,
+      class_option :basedir,
         aliases: '-c',
         default: File.join(ENV['HOME'], '.hackpad-cli/'),
         desc:    'Path to the hackpad-cli directory to use.'
@@ -90,7 +89,7 @@ module Hackpad
 
       desc 'version', 'Displays the hackpad-cli version.'
       def version
-        puts Hackpad::Cli::VERSION
+        puts File.read(File.expand_path('../../../../CHANGELOG.md', __FILE__))[/([0-9]+\.[0-9]+\.[0-9]+)/]
       end
 
     end

@@ -70,7 +70,7 @@ describe Hackpad::Cli::Api do
           .with(headers: {
             'Accept' => '*/*',
             'Authorization' => /OAuth oauth_consumer_key="123"/,
-            'User-Agent' => /hackpad-cli v#{Hackpad::Cli::VERSION}/
+            'User-Agent' => /hackpad-cli v/
           })
           .to_return(status: 200, body: '{"some": "result"}')
         expect(Hackpad::Cli::Api.get('/api/1.0/xxx')).to eq('some' => 'result')
@@ -82,7 +82,7 @@ describe Hackpad::Cli::Api do
           .with(headers: {
             'Accept' => '*/*',
             'Authorization' => /OAuth oauth_consumer_key="123"/,
-            'User-Agent' => /hackpad-cli v#{Hackpad::Cli::VERSION}/
+            'User-Agent' => /hackpad-cli v/
           })
           .to_return(status: 404, body: '{"some": "result"}')
         expect { Hackpad::Cli::Api.get('/api/1.0/xxx') }

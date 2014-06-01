@@ -1,11 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'hackpad/cli/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'hackpad-cli'
-  spec.version       = Hackpad::Cli::VERSION
+  spec.version       = File.read(File.expand_path('../CHANGELOG.md', __FILE__))[/([0-9]+\.[0-9]+\.[0-9]+)/]
   spec.authors       = ['mose']
   spec.email         = ['mose@mose.com']
   spec.summary       = %q(CLI for hackpad browsing and editing.)
@@ -19,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'thor'
+  spec.add_dependency 'configstruct', '~> 0.0.3'
   spec.add_dependency 'cliprompt', '~> 0.0.5'
   spec.add_dependency 'paint'
   spec.add_dependency 'oauth'
