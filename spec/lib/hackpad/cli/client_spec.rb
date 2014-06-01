@@ -79,7 +79,7 @@ describe Hackpad::Cli::Client do
     let(:client) { Hackpad::Cli::Client.new(options, input, output) }
     it do
       client.stats
-      expect(output.string).to eq "Site                 #{Paint[workspacevars['site'], :blue]}\nCached Pads          12\nLast Refresh         2013-10-02 00:00:00 +0800\n"
+      expect(output.string).to eq "Site                 #{Paint[workspacevars['site'], :blue]}\nCached Pads          12\nLast Refresh         #{timestamp}\n"
     end
   end
 
@@ -204,6 +204,7 @@ describe Hackpad::Cli::Client do
         expect(output).to receive(:printf).with(format, 'Moderated', 'false')
         expect(output).to receive(:printf).with(format, 'Cached', 'unknown')
         client.info '123'
+
       end
     end
 
