@@ -15,12 +15,7 @@ module Hackpad
       module_function
 
       def prepare(workspace)
-        consumer = OAuth::Consumer.new(
-          workspace.client_id,
-          workspace.secret,
-          site: workspace.site
-        )
-        @token = OAuth::AccessToken.new consumer
+        @hackpad ||= OAuth::Consumer.new(workspace.client_id, workspace.secret, site: workspace.site)
         @version = File.read(File.expand_path('../../../../CHANGELOG.md', __FILE__))[/([0-9]+\.[0-9]+\.[0-9]+)/]
       end
 
@@ -38,12 +33,12 @@ module Hackpad
 
       def read(id, ext)
         realext = (ext == 'md') ? 'html' : ext
-        get "/api/1.0/pad/#{id}/content.#{realext}", false, (ext == 'md')
+        get "/api/1.0/pad/#{id}/content/latest.#{realext}", false, (ext == 'md')
       end
 
       def get(url, json = true, to_md = false)
-        res = @token.get url, 'User-Agent' => "hackpad-cli v#{@version}"
-        if res.is_a? Net::HTTPSuccess
+        res = @hackpad.request :get, url
+        if res.is_a? Net::HTTPOK
           if json
             JSON.parse(res.body)
           else
