@@ -1,9 +1,13 @@
 Hackpad-cli changelog
 =====================
 
-v0.1.3 - wip
+v0.1.4 - wip
 -------------------
 
+v0.1.3 - 2015-07-24
+-------------------
+
+- fix a 500 case in get api calls
 - add command `add` for adding a new workspace
 - refactor config management and move code to the configstruct gem
 
