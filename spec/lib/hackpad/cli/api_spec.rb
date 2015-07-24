@@ -45,17 +45,17 @@ describe Hackpad::Cli::Api do
   describe '.read' do
     before { Hackpad::Cli::Api.prepare config }
     context 'when we want html,' do
-      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content.html')
+      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content/latest.html')
         .to_return(body: '<b>blah</b>', status: 200) }
       it { expect(subject.read('aaa', 'html')).to eq('<b>blah</b>') }
     end
     context 'when we want txt,' do
-      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content.txt')
+      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content/latest.txt')
         .to_return(body: 'blah', status: 200) }
       it { expect(subject.read('aaa', 'txt')).to eq('blah') }
     end
     context 'when we want md,' do
-      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content.html')
+      before { stub_request(:get, 'http://x.hackpad.com/api/1.0/pad/aaa/content/latest.html')
         .to_return(body: '<b>blah</b>', status: 200) }
       it { expect(subject.read('aaa', 'md')).to eq('**blah**') }
     end
@@ -67,11 +67,6 @@ describe Hackpad::Cli::Api do
     context 'when proper crendential are provided,' do
       it 'all goes well' do
         stub_request(:get, 'http://x.hackpad.com/api/1.0/xxx')
-          .with(headers: {
-            'Accept' => '*/*',
-            'Authorization' => /OAuth oauth_consumer_key="123"/,
-            'User-Agent' => /hackpad-cli v/
-          })
           .to_return(status: 200, body: '{"some": "result"}')
         expect(Hackpad::Cli::Api.get('/api/1.0/xxx')).to eq('some' => 'result')
       end
@@ -79,11 +74,6 @@ describe Hackpad::Cli::Api do
     context 'when api endpoint is not found' do
       it 'throws an exception' do
         stub_request(:get, 'http://x.hackpad.com/api/1.0/xxx')
-          .with(headers: {
-            'Accept' => '*/*',
-            'Authorization' => /OAuth oauth_consumer_key="123"/,
-            'User-Agent' => /hackpad-cli v/
-          })
           .to_return(status: 404, body: '{"some": "result"}')
         expect { Hackpad::Cli::Api.get('/api/1.0/xxx') }
           .to raise_error(Hackpad::Cli::ApiException, 'HTTP error, code 404')
