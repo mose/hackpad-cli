@@ -42,8 +42,8 @@ describe Hackpad::Cli::Config do
     after { FileUtils.rm workspacefile if File.exist?(workspacefile) }
     it do
       Hackpad::Cli::Config.new(options, input, output)
-      expect(File.exist? oldconfigfile).to be_false
-      expect(File.exist? workspacefile).to be_true
+      expect(File.exist? oldconfigfile).to be false
+      expect(File.exist? workspacefile).to be true
     end
   end
 

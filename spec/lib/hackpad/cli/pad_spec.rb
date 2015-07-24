@@ -16,7 +16,7 @@ describe Hackpad::Cli::Pad do
 
   describe '.cached?' do
     before { Hackpad::Cli::Store.stub(:exist?).and_return true }
-    it { expect(pad.cached?).to be_true }
+    it { expect(pad.cached?).to be true }
   end
 
   context 'when the pad has no data,' do
@@ -67,7 +67,7 @@ describe Hackpad::Cli::Pad do
         before { pad.load_from_provider Hackpad::Cli::Store, 'txt' }
         it { expect(pad.content).to eq "This\nis\nInformation!" }
         it { expect(pad.guest_policy).to eq 'open' }
-        it { expect(pad.moderated).to be_false }
+        it { expect(pad.moderated).to be false }
         it { expect(pad.cached_at).to eq 'some time' }
       end
     end

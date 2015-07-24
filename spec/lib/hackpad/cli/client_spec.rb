@@ -193,7 +193,7 @@ describe Hackpad::Cli::Client do
       before { pad.stub(:lines).and_return(2) }
       before { pad.stub(:guest_policy).and_return('open') }
       before { pad.stub(:moderated).and_return('false') }
-      before { pad.stub(:cached_at).and_return }
+      before { pad.stub(:cached_at).and_return('unknown') }
       it do
         expect(output).to receive(:printf).with(format, 'Id', Paint["123", :bold])
         expect(output).to receive(:printf).with(format, 'Title', Paint['title1', :yellow])

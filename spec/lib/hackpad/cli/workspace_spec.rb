@@ -48,7 +48,7 @@ describe Hackpad::Cli::Workspace do
     after { FileUtils.rm newworkspacefile if File.exist?(newworkspacefile) }
     it {
       workspace.create
-      expect(File.exist? newworkspacefile).to be_true
+      expect(File.exist? newworkspacefile).to be true
     }
   end
 
