@@ -19,7 +19,9 @@ else
 end
 
 RSpec.configure do |config|
-  config.mock_with :rspec
+  config.mock_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
