@@ -2,7 +2,7 @@ Hackpad-Cli
 ===================
 
 [![Gem Version](https://img.shields.io/gem/v/hackpad-cli.svg)](http://rubygems.org/gems/hackpad-cli)
-[![Downloads](http://img.shields.io/gem/dt/hackpad-cli.svg)](https://rubygems.org/gems/shellplay)
+[![Downloads](http://img.shields.io/gem/dt/hackpad-cli.svg)](https://rubygems.org/gems/hackpad-cli)
 [![Build Status](https://img.shields.io/travis/mose/hackpad-cli.svg)](https://travis-ci.org/mose/hackpad-cli)
 [![Coverage Status](https://img.shields.io/coveralls/mose/hackpad-cli.svg)](https://coveralls.io/r/mose/hackpad-cli)
 [![Dependency Status](https://img.shields.io/gemnasium/mose/hackpad-cli.svg)](https://gemnasium.com/mose/hackpad-cli)
