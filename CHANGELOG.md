@@ -1,9 +1,10 @@
 Hackpad-cli changelog
 =====================
 
-v0.1.4 - wip
+v0.1.4 - 2015-11-20
 -------------------
 - update dependencies with new version of reverse_markdown
+  and few other deps update
 
 v0.1.3 - 2015-07-24
 -------------------

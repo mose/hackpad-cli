@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'thor'
   spec.add_dependency 'configstruct', '~> 0.1.0'
-  spec.add_dependency 'cliprompt', '~> 0.1.0'
+  spec.add_dependency 'cliprompt', '~> 0.1.2'
   spec.add_dependency 'paint'
   spec.add_dependency 'oauth'
   spec.add_dependency 'reverse_markdown', '~> 1.0.0'
